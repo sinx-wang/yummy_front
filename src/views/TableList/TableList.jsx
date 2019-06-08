@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -8,7 +9,14 @@ import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import MUIDataTable from "mui-datatables";
-import { Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@material-ui/core";
+import {
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody
+} from "@material-ui/core";
 import Button from "../../components/CustomButtons/Button";
 import $ from "jquery";
 import MyStepper from "../../components/MyStepper/MyStepper";
@@ -56,7 +64,7 @@ const styles = {
     lineHeight: "13px",
     left: "0",
     marginLeft: "22px",
-    position: "relative",
+    position: "relative"
     // width: "260px"
   },
   button: {
@@ -112,8 +120,8 @@ const historyColumns = [
       filter: false,
       sort: true
     }
-  },
-]
+  }
+];
 
 class TableList extends React.Component {
   constructor(props) {
@@ -124,7 +132,7 @@ class TableList extends React.Component {
       selectedOrderId: 0,
       ordersNow: [],
       ordersHistory: []
-    }
+    };
   }
 
   componentDidMount() {
@@ -139,18 +147,18 @@ class TableList extends React.Component {
         if (result !== "none") {
           that.setState({
             email: result
-          })
+          });
         }
       }
-    })
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevState.email !== this.state.email) {
+    if (prevState.email !== this.state.email) {
       let that = this;
       let data = {
-        "userEmail": this.state.email
-      }
+        userEmail: this.state.email
+      };
       $.ajax({
         url: "http://localhost:8080/order/showNowOrdersToUser",
         type: "POST",
@@ -159,7 +167,7 @@ class TableList extends React.Component {
         success: function(result) {
           that.setState({
             ordersNow: result
-          })
+          });
         }
       });
       $.ajax({
@@ -172,15 +180,15 @@ class TableList extends React.Component {
             ordersHistory: result
           });
         }
-      })
+      });
     }
   }
 
   showOrderState = orderId => {
     this.setState({
       selectedOrderId: orderId
-    })
-  }
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -209,12 +217,19 @@ class TableList extends React.Component {
                   </TableHead>
                   <TableBody>
                     {this.state.ordersNow.map(row => (
-                      <TableRow key={row.orderId} hover style={{ cursor: "pointer" }} onClick={this.showOrderState.bind(this, row.orderId)}>
+                      <TableRow
+                        key={row.orderId}
+                        hover
+                        style={{ cursor: "pointer" }}
+                        onClick={this.showOrderState.bind(this, row.orderId)}
+                      >
                         <TableCell align="justify">{row.orderId}</TableCell>
                         <TableCell align="justify">{row.merName}</TableCell>
                         <TableCell align="justify">{row.foodName}</TableCell>
                         <TableCell align="justify">{row.foodPrice}</TableCell>
-                        <TableCell align="justify">{row.foodDiscount}</TableCell>
+                        <TableCell align="justify">
+                          {row.foodDiscount}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -233,9 +248,7 @@ class TableList extends React.Component {
                 title={"历史订单"}
                 data={this.state.ordersHistory}
                 columns={historyColumns}
-                options={
-                  { selectableRows: false }
-                }
+                options={{ selectableRows: false }}
               />
             </CardBody>
           </Card>
@@ -251,7 +264,7 @@ class OrderGoing extends React.Component {
     this.state = {
       selectedOrderId: "",
       activeStep: 0
-    }
+    };
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -264,12 +277,12 @@ class OrderGoing extends React.Component {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-          "orderId": orderId
+          orderId: orderId
         }),
-        success: function (result) {
-          that.setState({ activeStep: result })
+        success: function(result) {
+          that.setState({ activeStep: result });
         }
-      })
+      });
     }
     if (prevState.selectedOrderId !== this.state.orderId) {
       console.log("orderId: " + this.state.selectedOrderId);
@@ -285,15 +298,15 @@ class OrderGoing extends React.Component {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
-        "orderId": id
+        orderId: id
       }),
-      success: function (result) {
+      success: function(result) {
         if (result) {
           that.setState({ activeStep: 4 });
         }
       }
-    })
-  }
+    });
+  };
 
   refund = () => {
     console.log(this.state.selectedOrderId);
@@ -304,16 +317,16 @@ class OrderGoing extends React.Component {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
-        "orderId": id
+        orderId: id
       }),
-      success: function (result) {
+      success: function(result) {
         if (result.status) {
-          alert(result.refund)
+          alert(result.refund);
         }
       }
-    })
-    this.setState({ activeStep: 0 })
-  }
+    });
+    this.setState({ activeStep: 0 });
+  };
 
   render() {
     if (this.props.selectedOrderId === 0) {
@@ -321,16 +334,34 @@ class OrderGoing extends React.Component {
     }
     return (
       <div>
-        <Paper style={{marginBottom: 10}}>
+        <Paper style={{ marginBottom: 10 }}>
           <GridContainer style={{ width: "100%" }} justify="center">
             <GridItem xs={8}>
-              <h4 style={{ color: "#9c27b0", marginLeft: "22px" }}>订单编号: {this.state.selectedOrderId}</h4>
+              <h4 style={{ color: "#9c27b0", marginLeft: "22px" }}>
+                订单编号: {this.state.selectedOrderId}
+              </h4>
             </GridItem>
             <GridItem xs={2}>
-              <Button type="button" color="success" className={styles.button} style={{ marginTop: 15 }} onClick={this.confirmReceive}>签收</Button>
+              <Button
+                type="button"
+                color="success"
+                className={styles.button}
+                style={{ marginTop: 15 }}
+                onClick={this.confirmReceive}
+              >
+                签收
+              </Button>
             </GridItem>
             <GridItem xs={2}>
-              <Button type="button" color="warning" className={styles.button} style={{ marginTop: 15 }} onClick={this.refund}>退订</Button>
+              <Button
+                type="button"
+                color="warning"
+                className={styles.button}
+                style={{ marginTop: 15 }}
+                onClick={this.refund}
+              >
+                退订
+              </Button>
             </GridItem>
             <GridItem xs={12}>
               <MyStepper step={this.state.activeStep} />
@@ -338,9 +369,8 @@ class OrderGoing extends React.Component {
           </GridContainer>
         </Paper>
       </div>
-    )
+    );
   }
-
 }
 
 export default withStyles(styles)(TableList);
