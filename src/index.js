@@ -9,7 +9,7 @@ import RTL from "layouts/RTL.jsx";
 import Merchant from "layouts/Merchant.jsx";
 import Manager from "layouts/Manager.jsx";
 
-import "assets/css/material-dashboard-react.css?v=1.6.0";
+import "./assets/css/material-dashboard-react.css?v=1.6.0";
 import LoginView from "./views/LoginView/LoginView";
 import MerchanRegisterView from "./views/LoginView/MerchanRegisterView";
 import MerchantLoginView from "./views/LoginView/MerchantLoginView";
