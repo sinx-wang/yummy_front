@@ -1,10 +1,13 @@
+/* eslint-disable no-console */
 import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
+import { makeStyles } from "@material-ui/styles";
 import Input from "@material-ui/core/Input";
 // import InputLabel from "@material-ui/core/InputLabel";
 // core components
-import GridItem from "../../components/Grid/GridItem.jsx";
+import Grid from "@material-ui/core/Grid";
+import GridItem from "components/Grid/GridItem.jsx";
 import GridContainer from "../../components/Grid/GridContainer.jsx";
 // import CustomInput from "../../components/CustomInput/CustomInput.jsx";
 import Button from "../../components/CustomButtons/Button.jsx";
@@ -18,7 +21,7 @@ import CardBody from "../../components/Card/CardBody.jsx";
 import $ from "jquery";
 import { IconButton } from "@material-ui/core";
 
-const styles = {
+const useStyles = makeStyles({
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
     margin: "0",
@@ -34,19 +37,26 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
+  },
+  inputLabel: {
+    width: "100%",
+    marginTop: 10
+  },
+  addButton: {
+    marginLeft: 20
   }
-};
+});
 
 function UserProfile(props) {
-  const { classes } = props;
+  const classes = useStyles();
 
-  const [username, setUsername] = React.useState("")
+  const [username, setUsername] = React.useState("");
 
-  const [phone, setPhone] = React.useState("")
+  const [phone, setPhone] = React.useState("");
 
-  const [email, setEmail] = React.useState("")
+  const [email, setEmail] = React.useState("");
 
-  const [originAddresses, setOriginAddresses] = React.useState([])
+  const [originAddresses, setOriginAddresses] = React.useState([]);
 
   React.useEffect(() => {
     getEmailFromSession();
@@ -113,7 +123,7 @@ function UserProfile(props) {
         }
       }
     });
-  }
+  };
 
   const getUsernameValue = event => {
     setUsername(event.target.value);
@@ -189,145 +199,102 @@ function UserProfile(props) {
   );
 }
 
-class DynamicInputList extends React.Component {
-  constructor(props) {
-    super(props);
+function DynamicInputList(props) {
+  // 以下代替state
+  const [addresses, setAddresses] = React.useState([]);
 
-    this.state = {
-      addresses: [],
-      newAddress: "",
-      newPhone: "",
-      newId: 0
-    };
-  }
+  const [newAddress, setNewAddress] = React.useState("");
 
-  componentDidUpdate() {
-    if (this.props.addresses) {
-      this.setState({
-        addresses: this.props.addresses
-      });
+  const [newPhone, setNewPhone] = React.useState("");
+
+  const [newId, setNewId] = React.useState(0);
+
+  // useStyles
+  const classes = useStyles();
+
+  // React.useEffect(() => {}, [])，最后的方括号里的参数发生变化时会触发
+  // 该hook，即让大括号内的方法发生，所以方括号里没有参数可以代替componentDidMount，
+  // 下面的写法意为如果props发生变化则检测addresses和props.addresses，不一样就更新
+  React.useEffect(() => {
+    if (addresses != props.addresses) {
+      setAddresses(props.addresses);
     }
+  }, [props]);
 
-    console.log(this.addresses);
-  }
+  const handleAddrChange = e => {
+    setNewAddress(e.target.value);
+  };
 
-  render() {
-    return (
-      <div>
-        <form>
+  const handlePhoneChange = e => {
+    setNewPhone(e.target.value);
+  };
+
+  const handleAdd = () => {
+    setNewId(newId + 1);
+    setAddresses(
+      addresses.push({
+        addressId: newId,
+        address: newAddress,
+        phone: newPhone
+      })
+    );
+  };
+
+  const handleDelete = addrId => {
+    console.log("delete");
+  };
+
+  return (
+    <div>
+      <Grid container>
+        <GridItem xs={7}>
           <Input
             id="new-input"
-            onChange={this.handleAddrChange}
+            onChange={handleAddrChange}
             placeholder="新地址"
-            style={{ width: 500 }}
-            value={this.state.newAddress}
+            // style={{ width: 500 }}
+            // 尽量全部改成class，便于维护CSS
+            className={classes.inputLabel}
+            value={newAddress}
           />
+        </GridItem>
+        <GridItem xs={3}>
           <Input
             id="new-input"
-            onChange={this.handlePhoneChange}
+            onChange={handlePhoneChange}
             placeholder="电话号码"
-            style={{ marginLeft: 20, width: 500 }}
-            value={this.state.newPhone}
+            // style={{ marginLeft: 20, width: 500 }}
+            className={classes.inputLabel}
+            value={newPhone}
           />
+        </GridItem>
+        <GridItem xs={2}>
           <Button
             color="primary"
             type="button"
-            style={{ marginLeft: 20 }}
-            onClick={this.handleAdd}
+            // style={{ marginLeft: 20 }}
+            className={classes.addButton}
+            onClick={handleAdd}
           >
             增加
           </Button>
-        </form>
-
-        <ul>
-          {this.state.addresses.map(addr => (
-            <Address
-              key={addr.addressId}
-              addressId={addr.addressId}
-              address={addr.address}
-              phone={addr.phone}
-            />
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
-  handleAddrChange = e => {
-    this.setState({ newAddress: e.target.value });
-  };
-
-  handlePhoneChange = e => {
-    this.setState({ newPhone: e.target.value });
-  };
-
-  handleAdd = () => {
-    // let data = {
-    //   address: this.state.newAddress,
-    //   phone: this.state.newPhone,
-    //   addressesNum: this.addresses.length,
-    //   addressList: this.addresses
-    // };
-
-    this.setState(prevState => {
-      return {
-        newId: prevState.newId++,
-        addresses: this.state.addresses.push({
-          addressId: this.state.newId,
-          address: this.state.newAddress,
-          phone: this.state.newPhone
-        })
-      };
-    });
-
-    // $.ajax({
-    //   url: "http://localhost:8080/user/setAddresses",
-    //   type: "POST",
-    //   contentType: "application/json",
-    //   data: JSON.stringify(data),
-    //   success: function(result) {
-    //     if (result.status) {
-    //       alert("修改地址信息成功");
-    //     } else {
-    //       alert(result.message);
-    //     }
-    //   }
-    // });
-  };
-
-  handleDelete = addrId => {
-    let oriAddrs = this.state.addresses;
-    let index = 0;
-    for (let i = 0; i < oriAddrs.length; i++) {
-      if (oriAddrs[i].addressId === addrId) {
-        index = i;
-      }
-    }
-
-    oriAddrs.splice(index, 1);
-
-    if (addrId > 0) {
-      $.ajax({
-        url: "http://localhost:8080/user/deleteAddress",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({
-          addressId: addrId
-        }),
-        success: function(result) {
-          if (result.status) {
-            alert("删除成功");
-          } else {
-            alert(result.message);
-          }
-        }
-      });
-    }
-
-    this.setState({ addresses: oriAddrs });
-  };
+        </GridItem>
+      </Grid>
+      <ul>
+        {addresses.map(addr => (
+          <Address
+            key={addr.addressId}
+            addressId={addr.addressId}
+            address={addr.address}
+            phone={addr.phone}
+          />
+        ))}
+      </ul>
+    </div>
+  );
 }
 
+// 下面的最好也改成React hooks形式
 class Address extends React.Component {
   valueToParent = value => {
     this.props.handleDelete(value);
@@ -350,4 +317,4 @@ class Address extends React.Component {
   }
 }
 
-export default withStyles(styles)(UserProfile);
+export default UserProfile;
