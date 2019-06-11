@@ -6,15 +6,15 @@ import Input from "@material-ui/core/Input";
 // core components
 import GridItem from "../../components/Grid/GridItem.jsx";
 import GridContainer from "../../components/Grid/GridContainer.jsx";
-import CustomInput from "../../components/CustomInput/CustomInput.jsx";
+// import CustomInput from "../../components/CustomInput/CustomInput.jsx";
 import Button from "../../components/CustomButtons/Button.jsx";
 import MyButton from "@material-ui/core/Button";
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@material-ui/icons/Delete";
 import Card from "../../components/Card/Card.jsx";
 import CardHeader from "../../components/Card/CardHeader.jsx";
 // import CardAvatar from "components/Card/CardAvatar.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
-import CardFooter from "../../components/Card/CardFooter.jsx";
+// import CardFooter from "../../components/Card/CardFooter.jsx";
 import $ from "jquery";
 import { IconButton } from "@material-ui/core";
 
@@ -55,15 +55,14 @@ function UserProfile(props) {
   React.useEffect(() => {
     let json = {
       "email-address": email
-    }
+    };
     $.ajax({
       async: true,
       url: "http://localhost:8080/user/getProfile",
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify(json),
-      success: function (data) {
-        console.log(data);
+      success: function(data) {
         setUsername(data.uname);
         setPhone(data.uphone);
       }
@@ -74,9 +73,9 @@ function UserProfile(props) {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
-        "email": email
+        email: email
       }),
-      success: function (data) {
+      success: function(data) {
         setOriginAddresses(data.addressList);
       }
     });
@@ -89,10 +88,9 @@ function UserProfile(props) {
       },
       url: "http://localhost:8080/user/getEmailSession",
       type: "POST",
-      success: function (result) {
+      success: function(result) {
         if (result !== "none") {
           setEmail(result);
-          console.log("session: " + result);
         } else {
           if (props.history.location.state) {
             let propsEmail = props.history.location.state.emailAddress;
@@ -105,46 +103,46 @@ function UserProfile(props) {
               type: "POST",
               contentType: "application/json",
               data: JSON.stringify({
-                "email": propsEmail
+                email: propsEmail
               }),
               success: function(result) {
-                console.log("putSession: " + result);
+                console.log(result);
               }
-            })
+            });
           }
         }
       }
     });
   }
 
-  const getUsernameValue = (event) => {
-    setUsername(event.target.value)
-  }
+  const getUsernameValue = event => {
+    setUsername(event.target.value);
+  };
 
   // const getEmailValue = (event) => {
   //   setEmail(event.target.value)
   // }
 
-  const getPhoneValue = (event) => {
-    setPhone(event.target.value)
-  }
+  const getPhoneValue = event => {
+    setPhone(event.target.value);
+  };
 
   const setProfile = () => {
     if (email && username && phone) {
-      console.log(email);
+      //console.log(email);
       let data = {
         // "origin-email": props.history.location.state.emailAddress,
         "origin-email": email,
-        "email": email,
-        "uphone": phone,
-        "uname": username
-      }
+        email: email,
+        uphone: phone,
+        uname: username
+      };
       $.ajax({
         url: "http://localhost:8080/user/setProfile",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function (result) {
+        success: function(result) {
           if (result.status) {
             alert("更改成功");
           } else {
@@ -152,9 +150,9 @@ function UserProfile(props) {
             alert(result.message);
           }
         }
-      })
+      });
     }
-  }
+  };
 
   const cancel = () => {
     $.ajax({
@@ -162,89 +160,27 @@ function UserProfile(props) {
       type: "POST",
       contentType: "application/json",
       data: JSON.stringify({
-        "email": email
+        email: email
       }),
-      success: function () {
+      success: function() {
         props.history.push({
           pathname: "/login"
-        })
+        });
       }
-    })
-  }
+    });
+  };
 
   return (
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>主要信息</h4>
-              <p className={classes.cardCategoryWhite}>编辑您的主要信息</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs sm={12} md>
-                  <CustomInput
-                    labelText="用户名"
-                    id="username"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      value: username,
-                      onChange: getUsernameValue
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs sm={12} md>
-                  <CustomInput
-                    labelText="电话"
-                    id="phone-number"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      value: phone,
-                      onChange: getPhoneValue
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs sm={12} md>
-                  <CustomInput
-                    labelText="电子邮件"
-                    id="email-address"
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      value: email,
-                      // onChange: getEmailValue,
-                      readOnly: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <GridContainer>
-                <GridItem>
-                  <Button color="info" onClick={setProfile}>更新</Button>
-                </GridItem>
-                <GridItem>
-                  <Button color="danger" onClick={cancel}>注销</Button>
-                </GridItem>
-              </GridContainer>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>常用地址</h4>
-              <p className={classes.cardCategoryWhite}>更改您的常用收货地址</p>
+              <h4 className={classes.cardTitleWhite}>地址簿</h4>
+              <p className={classes.cardCategoryWhite}>管理您的地址簿</p>
             </CardHeader>
             <CardBody>
-              <DynamicInputList email={email} addrs={originAddresses} />
+              <DynamicInputList addresses={originAddresses} />
             </CardBody>
           </Card>
         </GridItem>
@@ -256,94 +192,110 @@ function UserProfile(props) {
 class DynamicInputList extends React.Component {
   constructor(props) {
     super(props);
-    // addresses: 对象数组
-    this.state = { addresses: [], text: "", newId: 0 };
+
+    this.state = {
+      addresses: [],
+      newAddress: "",
+      newPhone: "",
+      newId: 0
+    };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.addrs !== prevProps.addrs) {
-      console.log(this.props.addrs)
+  componentDidUpdate() {
+    if (this.props.addresses) {
       this.setState({
-        addresses: this.props.addrs
+        addresses: this.props.addresses
       });
     }
-    if (prevState.addresses !== this.state.addresses) {
-      console.log(this.state.addresses);
-    }
+
+    console.log(this.addresses);
   }
 
   render() {
     return (
       <div>
-        <InputList addresses={this.state.addresses} handleDelete={this.handleDeleteChange.bind(this)} />
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <Input
             id="new-input"
-            onChange={this.handleChange}
-            placeholder="添加新地址"
-            style={{ margin: 5, width: 700 }}
-            value={this.state.text}
+            onChange={this.handleAddrChange}
+            placeholder="新地址"
+            style={{ width: 500 }}
+            value={this.state.newAddress}
           />
-          <MyButton variant="outlined" color="secondary" type="submit">
-            添加第{this.state.addresses.length + 1}个
-          </MyButton>
+          <Input
+            id="new-input"
+            onChange={this.handlePhoneChange}
+            placeholder="电话号码"
+            style={{ marginLeft: 20, width: 500 }}
+            value={this.state.newPhone}
+          />
+          <Button
+            color="primary"
+            type="button"
+            style={{ marginLeft: 20 }}
+            onClick={this.handleAdd}
+          >
+            增加
+          </Button>
         </form>
-        <GridContainer>
-          <GridItem>
-            <Button color="primary" type="button" onClick={this.handleConfirmChange}>确认提交</Button>
-          </GridItem>
-        </GridContainer>
+
+        <ul>
+          {this.state.addresses.map(addr => (
+            <Address
+              key={addr.addressId}
+              addressId={addr.addressId}
+              address={addr.address}
+              phone={addr.phone}
+            />
+          ))}
+        </ul>
       </div>
     );
   }
 
-  handleChange = e => {
-    this.setState({ text: e.target.value });
+  handleAddrChange = e => {
+    this.setState({ newAddress: e.target.value });
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    if (!this.state.text.length) {
-      return;
-    }
+  handlePhoneChange = e => {
+    this.setState({ newPhone: e.target.value });
+  };
+
+  handleAdd = () => {
+    // let data = {
+    //   address: this.state.newAddress,
+    //   phone: this.state.newPhone,
+    //   addressesNum: this.addresses.length,
+    //   addressList: this.addresses
+    // };
+
     this.setState(prevState => {
-      return { newId: prevState.newId - 1 }
+      return {
+        newId: prevState.newId++,
+        addresses: this.state.addresses.push({
+          addressId: this.state.newId,
+          address: this.state.newAddress,
+          phone: this.state.newPhone
+        })
+      };
     });
-    const newAddress = {
-      addressId: this.state.newId,
-      address: this.state.text
-    }
-    this.setState(prevState => ({
-      addresses: prevState.addresses.concat(newAddress),
-      text: ""
-    }));
+
+    // $.ajax({
+    //   url: "http://localhost:8080/user/setAddresses",
+    //   type: "POST",
+    //   contentType: "application/json",
+    //   data: JSON.stringify(data),
+    //   success: function(result) {
+    //     if (result.status) {
+    //       alert("修改地址信息成功");
+    //     } else {
+    //       alert(result.message);
+    //     }
+    //   }
+    // });
   };
 
-  handleConfirmChange = () => {
-    let data = {
-      "email": this.props.email,
-      "addressesNum": this.state.addresses.length,
-      "addressList": this.state.addresses
-    }
-    this.setState(prevState => {
-      return { addresses: prevState.addresses }
-    })
-    $.ajax({
-      url: "http://localhost:8080/user/setAddresses",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      success: function (result) {
-        if (result.status) {
-          alert("修改地址信息成功");
-        } else {
-          alert(result.message)
-        }
-      }
-    })
-  }
-
-  handleDeleteChange = addrId => {
+  handleDelete = addrId => {
     let oriAddrs = this.state.addresses;
     let index = 0;
     for (let i = 0; i < oriAddrs.length; i++) {
@@ -351,46 +303,49 @@ class DynamicInputList extends React.Component {
         index = i;
       }
     }
+
     oriAddrs.splice(index, 1);
+
     if (addrId > 0) {
       $.ajax({
         url: "http://localhost:8080/user/deleteAddress",
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-          "addressId": addrId
+          addressId: addrId
         }),
-        success: function (result) {
+        success: function(result) {
           if (result.status) {
             alert("删除成功");
           } else {
-            alert(result.message)
+            alert(result.message);
           }
         }
-      })
+      });
     }
-    this.setState({ addresses: oriAddrs })
-  }
+
+    this.setState({ addresses: oriAddrs });
+  };
 }
 
-class InputList extends React.Component {
-
+class Address extends React.Component {
   valueToParent = value => {
-    this.props.handleDelete(value)
-  }
+    this.props.handleDelete(value);
+  };
 
   render() {
+    const { addr } = this.props;
     return (
-      <dl style={{ listStyleType: "none" }}>
-        {this.props.addresses.map(row => (
-          <li key={row.addressId}>
-            <Input style={{ margin: 5, width: 700 }} value={row.address} />
-            <IconButton style={{ marginLeft: 15 }} className={this.props.button} onClick={this.valueToParent.bind(this, row.addressId)}>
-              <DeleteIcon />
-            </IconButton>
-          </li>
-        ))}
-      </dl>
+      <li key={addr.addressId}>
+        <Input style={{ width: 500 }} value={addr.address} />
+        <Input style={{ marginLeft: 20, width: 500 }} value={addr.phone} />
+        <IconButton
+          style={{ marginLeft: 20 }}
+          onClick={this.valueToParent.bind(this, addr.addressId)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </li>
     );
   }
 }
