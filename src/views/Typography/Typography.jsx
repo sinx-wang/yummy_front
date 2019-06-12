@@ -13,6 +13,8 @@ import Filter from "@material-ui/icons/Filter"
 import { FormControl, InputLabel, Select, MenuItem, Paper, Table, TableHead, TableRow, TableCell, TableBody, TextField } from "@material-ui/core";
 import CardFooter from "../../components/Card/CardFooter";
 import $ from "jquery";
+import AccessTime from "@material-ui/icons/AccessTime";
+
 
 const style = {
   ...cardImagesStyles,
@@ -41,6 +43,32 @@ const style = {
   }
 };
 
+const restaurants=[
+  {
+    img:'../../assets/img/burgers.jpg',
+    name:"restaurant1",
+    description:"burgers",
+    distance:"<100m",
+  },
+  {
+    img:'../../assets/img/burgers.jpg',
+    name:"restaurant2",
+    description:"burgers",
+    distance:"<100m",
+  },
+  {
+    img:'../../assets/img/burgers.jpg',
+    name:"restaurant3",
+    description:"burgers",
+    distance:"<100m",
+  },
+  {
+    img:'../../assets/img/burgers.jpg',
+    name:"restaurant4",
+    description:"burgers",
+    distance:"<100m",
+  },
+];
 
 // 重构目标：实现分页
 function TypographyPage(props) {
@@ -69,7 +97,7 @@ function TypographyPage(props) {
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
 
   const [foodNum, setFoodNum] = React.useState(1);
-
+/*
   React.useEffect(() => {
     // 设置当前登录用户
     $.ajax({
@@ -190,7 +218,13 @@ function TypographyPage(props) {
       }
     })
   }
-
+*/
+  const handleClickRestaurant = (event,restaurant) => {
+    alert("click here:"+restaurant.name);
+    props.history.push({
+      pathname: "/admin/restaurant?id="+restaurant.name
+    })
+  }
 
   return (
     <GridContainer>
@@ -198,169 +232,35 @@ function TypographyPage(props) {
         <Card>
           <CardHeader color="info">
             <h4 className={classes.cardTitleWhite}>餐厅选择</h4>
-            <p className={classes.cardCategoryWhite}>
-              请先选择您的期望到达时间
-            </p>
           </CardHeader>
-          <CardBody>
-            <GridContainer>
-              <GridItem xs={3} sm md>
-                <FormControl required style={{ minWidth: 120 }}>
-                  <InputLabel htmlFor="time-limit">送餐时间</InputLabel>
-                  <Select
-                    value={selectedTime}
-                    onChange={handleTimeSelect}
-                    name="time"
-                    inputProps={{
-                      id: "time-limit"
-                    }}
-                    className={classes.selectEmpty}
-                  >
-                    {timeOptions.map(row => (
-                      <MenuItem key={row.value} value={row.value}>{row.optionName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+        <CardBody>
+          <GridContainer>
+            {restaurants.map(restaurant=>(
+              <GridItem xs={4} sm={4}>
+                 <Card onClick={(event)=>handleClickRestaurant(event,restaurant)}>
+                   <CardHeader color="info" style={{padding:0}}>
+                     <img
+                      className={classes.cardImgTop}
+                      alt="100%x200"
+                      style={{ height: "200px", width: "100%", display: "block" }}
+                      src={require('../../assets/img/burgers.jpg')}
+                      data-holder-rendered="true"
+                      />
+                    </CardHeader>
+                   <CardBody>
+                   <h4 className={classes.cardTitle}>{restaurant.name}</h4>
+                   <p className={classes.cardCategory}>{restaurant.description}</p>
+                   </CardBody>
+                   <CardFooter chart>
+                     <div className={classes.stats}>
+                       {restaurant.distance}
+                     </div>
+                   </CardFooter>
+                 </Card>
               </GridItem>
-              <GridItem xs={3} sm md>
-                <FormControl style={{ minWidth: 120 }}>
-                  <InputLabel htmlFor="food-type">食品风格</InputLabel>
-                  <Select
-                    value={selectedType}
-                    onChange={handleTypeSelect}
-                    name="type"
-                    inputProps={{
-                      id: "food-type"
-                    }}
-                    className={classes.selectEmpty}
-                  >
-                    {types.map(row => (
-                      <MenuItem key={row.value} value={row.value}>{row.typeName}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </GridItem>
-              <GridItem xs={6}></GridItem>
-              <GridItem xs={12}>
-                <Paper className={classes.root} style={{ marginTop: 10 }}>
-                  <Table className={classes.table}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="justify">距离</TableCell>
-                        <TableCell align="justify">类型</TableCell>
-                        <TableCell align="justify">名称</TableCell>
-                        <TableCell align="justify">地点</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {merchants.map(row => (
-                        <TableRow key={row.merId} selected={true} hover onClick={(e) => handleResClick(row.merId, e)} style={{ cursor: "pointer" }}>
-                          <TableCell align="justify">{(row.distance).toFixed(2)}</TableCell>
-                          <TableCell align="justify">{row.type}</TableCell>
-                          <TableCell align="justify">{row.name}</TableCell>
-                          <TableCell align="justify">{row.location}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Paper>
-              </GridItem>
-            </GridContainer>
-          </CardBody>
-        </Card>
-      </GridItem>
-      <GridItem xs={6} sm={6}>
-        <Tabs
-          title="单品/套餐:"
-          headerColor="rose"
-          tabs={[
-            {
-              tabName: "单品",
-              tabIcon: FilterNone,
-              tabContent: (
-                // style={{ height: 400 }}
-                <Paper className={classes.root}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="justify">名称</TableCell>
-                        <TableCell align="justify">价格</TableCell>
-                        <TableCell align="justify">剩余数量</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {singleFoods.map(row => (
-                        <TableRow key={row.foodId} hover onClick={(e) => handleFoodClick(row.foodId, row.description, e)} style={{ cursor: "pointer" }}>
-                          <TableCell align="justify">{row.foodName}</TableCell>
-                          <TableCell align="justify">{row.foodPrice}</TableCell>
-                          <TableCell align="justify">{row.dailyLast}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Paper>
-              )
-            },
-            {
-              tabName: "套餐",
-              tabIcon: Filter,
-              tabContent: (
-                <Paper className={classes.root}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="justify">名称</TableCell>
-                        <TableCell align="justify">价格</TableCell>
-                        <TableCell align="justify">剩余数量</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {multiFoods.map(row => (
-                        <TableRow key={row.foodId} hover onClick={(e) => handleFoodClick(row.foodId, row.description, e)} style={{ cursor: "pointer" }}>
-                          <TableCell align="justify">{row.foodName}</TableCell>
-                          <TableCell align="justify">{row.foodPrice}</TableCell>
-                          <TableCell align="justify">{row.dailyLast}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Paper>
-              )
-            }
-          ]}
-        >
-        </Tabs>
-      </GridItem>
-      <GridItem xs={6} sm={6}>
-        <Card>
-          <img
-            className={classes.cardImgTop}
-            data-src="holder.js/100px180"
-            alt="100%x180"
-            style={{ height: "180px", width: "100%", display: "block" }}
-            src="../../assets/img/paella.jpg"
-            data-holder-rendered="true"
-          />
-          <CardBody>
-            <p>{foodContent.description}</p>
-          </CardBody>
-          <CardFooter>
-            <GridContainer>
-              <GridItem>
-                <TextField
-                  required
-                  id="foodNum"
-                  label="份数"
-                  value={foodNum}
-                  onChange={handleNumInput}
-                  margin="normal"
-                />
-              </GridItem>
-              <GridItem>
-                <Button type="button" color="success" onClick={handleOrderFood} style={{ marginTop: "20px" }} disabled={buttonDisabled}>订餐</Button>
-              </GridItem>
-            </GridContainer>
-          </CardFooter>
+            ))}
+          </GridContainer>
+        </CardBody>
         </Card>
       </GridItem>
     </GridContainer>

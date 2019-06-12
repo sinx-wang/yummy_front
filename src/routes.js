@@ -14,6 +14,7 @@ import UserProfile from "views/UserProfile/UserProfile.jsx";
 // import TableList from "views/TableList/TableList.jsx";
 import OrderList from "views/Customer/OrderList.jsx";
 import Typography from "views/Typography/Typography.jsx";
+import Restaurant from "./views/RestaurantView/Restaurant";
 // import Icons from "views/Icons/Icons.jsx";
 // import Maps from "views/Maps/Maps.jsx";
 // import NotificationsPage from "views/Notifications/Notifications.jsx";
@@ -50,6 +51,14 @@ var dashboardRoutes = [
     name: "订单",
     icon: "content_paste",
     component: OrderList,
+    layout: "/admin"
+  },
+  
+  {
+    path: "/restaurant",
+    name: "餐厅详情",
+    icon: LibraryBooks,
+    component: Restaurant,
     layout: "/admin"
   }
   // {
