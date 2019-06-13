@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React from "react";
+import PropTypes from "prop-types";
 // @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
 import { makeStyles } from "@material-ui/styles";
 import Input from "@material-ui/core/Input";
 // import InputLabel from "@material-ui/core/InputLabel";
@@ -11,15 +11,20 @@ import GridItem from "components/Grid/GridItem.jsx";
 import GridContainer from "../../components/Grid/GridContainer.jsx";
 // import CustomInput from "../../components/CustomInput/CustomInput.jsx";
 import Button from "../../components/CustomButtons/Button.jsx";
-import MyButton from "@material-ui/core/Button";
+// import MyButton from "@material-ui/core/Button";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Card from "../../components/Card/Card.jsx";
 import CardHeader from "../../components/Card/CardHeader.jsx";
 // import CardAvatar from "components/Card/CardAvatar.jsx";
 import CardBody from "../../components/Card/CardBody.jsx";
 // import CardFooter from "../../components/Card/CardFooter.jsx";
-import $ from "jquery";
 import { IconButton } from "@material-ui/core";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import Radio from "@material-ui/core/Radio";
 
 const useStyles = makeStyles({
   cardCategoryWhite: {
@@ -44,141 +49,26 @@ const useStyles = makeStyles({
   },
   addButton: {
     marginLeft: 20
+  },
+  list: {
+    width: "100%"
+  },
+  delete: {
+    marginRight: 60
   }
 });
 
-function UserProfile(props) {
+function UserProfile() {
   const classes = useStyles();
 
-  const [username, setUsername] = React.useState("");
+  // const [username, setUsername] = React.useState("");
 
-  const [phone, setPhone] = React.useState("");
+  // const [phone, setPhone] = React.useState("");
 
-  const [email, setEmail] = React.useState("");
+  // const [email, setEmail] = React.useState("");
 
-  const [originAddresses, setOriginAddresses] = React.useState([]);
-
-  React.useEffect(() => {
-    getEmailFromSession();
-  }, []);
-
-  React.useEffect(() => {
-    let json = {
-      "email-address": email
-    };
-    $.ajax({
-      async: true,
-      url: "http://localhost:8080/user/getProfile",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(json),
-      success: function(data) {
-        setUsername(data.uname);
-        setPhone(data.uphone);
-      }
-    });
-    $.ajax({
-      async: true,
-      url: "http://localhost:8080/user/getAddresses",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        email: email
-      }),
-      success: function(data) {
-        setOriginAddresses(data.addressList);
-      }
-    });
-  }, [email]);
-
-  const getEmailFromSession = () => {
-    $.ajax({
-      xhrFields: {
-        withCredentials: true
-      },
-      url: "http://localhost:8080/user/getEmailSession",
-      type: "POST",
-      success: function(result) {
-        if (result !== "none") {
-          setEmail(result);
-        } else {
-          if (props.history.location.state) {
-            let propsEmail = props.history.location.state.emailAddress;
-            setEmail(propsEmail);
-            $.ajax({
-              xhrFields: {
-                withCredentials: true
-              },
-              url: "http://localhost:8080/user/putEmailSession",
-              type: "POST",
-              contentType: "application/json",
-              data: JSON.stringify({
-                email: propsEmail
-              }),
-              success: function(result) {
-                console.log(result);
-              }
-            });
-          }
-        }
-      }
-    });
-  };
-
-  const getUsernameValue = event => {
-    setUsername(event.target.value);
-  };
-
-  // const getEmailValue = (event) => {
-  //   setEmail(event.target.value)
-  // }
-
-  const getPhoneValue = event => {
-    setPhone(event.target.value);
-  };
-
-  const setProfile = () => {
-    if (email && username && phone) {
-      //console.log(email);
-      let data = {
-        // "origin-email": props.history.location.state.emailAddress,
-        "origin-email": email,
-        email: email,
-        uphone: phone,
-        uname: username
-      };
-      $.ajax({
-        url: "http://localhost:8080/user/setProfile",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(data),
-        success: function(result) {
-          if (result.status) {
-            alert("更改成功");
-          } else {
-            // setEmail(props.history.location.state.emailAddress);
-            alert(result.message);
-          }
-        }
-      });
-    }
-  };
-
-  const cancel = () => {
-    $.ajax({
-      url: "http://localhost:8080/user/cancel",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        email: email
-      }),
-      success: function() {
-        props.history.push({
-          pathname: "/login"
-        });
-      }
-    });
-  };
+  // const [originAddresses, setOriginAddresses] = React.useState([]);
+  const originAddresses = [];
 
   return (
     <div>
@@ -209,6 +99,8 @@ function DynamicInputList(props) {
 
   const [newId, setNewId] = React.useState(0);
 
+  const [selectedValue, setSelectedValue] = React.useState(0);
+
   // useStyles
   const classes = useStyles();
 
@@ -218,8 +110,13 @@ function DynamicInputList(props) {
   React.useEffect(() => {
     if (addresses != props.addresses) {
       setAddresses(props.addresses);
+      console.log(addresses);
     }
   }, [props]);
+
+  React.useEffect(() => {
+    console.log(addresses);
+  }, [addresses]);
 
   const handleAddrChange = e => {
     setNewAddress(e.target.value);
@@ -230,18 +127,30 @@ function DynamicInputList(props) {
   };
 
   const handleAdd = () => {
-    setNewId(newId + 1);
+    let id = newId + 1;
+    let oriAddr = addresses;
     setAddresses(
-      addresses.push({
-        addressId: newId,
-        address: newAddress,
-        phone: newPhone
-      })
+      oriAddr.concat([
+        {
+          addressId: id,
+          address: newAddress,
+          phone: newPhone
+        }
+      ])
     );
+    setNewId(id);
+    setNewAddress("");
+    setNewPhone("");
+    console.log(addresses);
   };
 
   const handleDelete = addrId => {
-    console.log("delete");
+    console.log("delete" + addrId);
+  };
+
+  const selectValue = event => {
+    setSelectedValue(event.target.value);
+    console.log(event.target.value);
   };
 
   return (
@@ -280,41 +189,65 @@ function DynamicInputList(props) {
           </Button>
         </GridItem>
       </Grid>
-      <ul>
+      <List className={classes.list}>
         {addresses.map(addr => (
           <Address
+            addr={addr}
             key={addr.addressId}
-            addressId={addr.addressId}
-            address={addr.address}
-            phone={addr.phone}
+            handleDelete={handleDelete}
+            sv={selectedValue}
+            handleSelect={selectValue}
           />
         ))}
-      </ul>
+      </List>
     </div>
   );
 }
 
-// 下面的最好也改成React hooks形式
-class Address extends React.Component {
-  valueToParent = value => {
-    this.props.handleDelete(value);
+function Address(props) {
+  const valueToParent = value => {
+    props.handleDelete(value);
   };
 
-  render() {
-    const { addr } = this.props;
-    return (
-      <li key={addr.addressId}>
-        <Input style={{ width: 500 }} value={addr.address} />
-        <Input style={{ marginLeft: 20, width: 500 }} value={addr.phone} />
-        <IconButton
-          style={{ marginLeft: 20 }}
-          onClick={this.valueToParent.bind(this, addr.addressId)}
-        >
+  const classes = useStyles();
+
+  const { addr } = props;
+
+  React.useEffect(() => {
+    console.log("sv: " + props.sv);
+    console.log("addressId: " + addr.addressId);
+  }, [props]);
+
+  return (
+    <ListItem key={addr.addressId} button>
+      <ListItemIcon>
+        <Radio
+          checked={props.sv == addr.addressId}
+          onChange={props.handleSelect}
+          value={addr.addressId}
+        />
+      </ListItemIcon>
+      <ListItemText primary={"地址：" + addr.address} />
+      <ListItemText primary={"电话：" + addr.phone} />
+      <ListItemSecondaryAction className={classes.delete}>
+        <IconButton edge="end" onClick={valueToParent}>
           <DeleteIcon />
         </IconButton>
-      </li>
-    );
-  }
+      </ListItemSecondaryAction>
+    </ListItem>
+  );
 }
+
+// 类型检查
+DynamicInputList.propTypes = {
+  addresses: PropTypes.array
+};
+
+Address.propTypes = {
+  handleDelete: PropTypes.func.isRequired,
+  handleSelect: PropTypes.func.isRequired,
+  addr: PropTypes.object.isRequired,
+  sv: PropTypes.number.isRequired
+};
 
 export default UserProfile;
