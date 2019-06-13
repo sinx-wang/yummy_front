@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React from "react";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import GridItem from "components/Grid/GridItem.jsx";
@@ -86,7 +87,7 @@ const useStyles = makeStyles({
 });
 
 // 无状态组件：方法
-function OrderList(props) {
+function OrderList() {
   //React.useState(() => {}, [])相当于componentDidMount生命周期方法，这部分可以之后再说
   React.useEffect(() => {
     console.log("Mounted");
@@ -231,5 +232,9 @@ function DetailedExpansionPanel(props) {
     </ExpansionPanel>
   );
 }
+
+DetailedExpansionPanel.propTypes = {
+  data: PropTypes.object.isRequired
+};
 
 export default OrderList;
