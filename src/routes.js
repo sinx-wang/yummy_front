@@ -53,7 +53,6 @@ var dashboardRoutes = [
     component: OrderList,
     layout: "/admin"
   },
-  
   {
     path: "/restaurant",
     name: "餐厅详情",
