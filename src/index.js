@@ -15,7 +15,7 @@ import MerchanRegisterView from "./views/LoginView/MerchanRegisterView";
 import MerchantLoginView from "./views/LoginView/MerchantLoginView";
 import PayView from "./views/LoginView/PayView";
 import AdminLoginView from "./views/LoginView/AdminLoginView";
-import Restaurant from "./views/RestaurantView/Restaurant"
+import Restaurant from "./views/RestaurantView/Restaurant";
 
 const hist = createBrowserHistory();
 
@@ -23,7 +23,7 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
       <Route path="/admin" component={Admin} />
-        <Route path="/admin/reataurant" component={Restaurant}/>
+      <Route path="/admin/reataurant" component={Restaurant} />
       <Route path="/merchant" component={Merchant} />
       <Route path="/rtl" component={RTL} />
       <Route path="/manager" component={Manager} />

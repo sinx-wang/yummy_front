@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from "react";
 import { Interpolation, Svg } from "chartist";
 import ChartishGraph from "react-chartist";
@@ -42,19 +43,19 @@ class Statistics extends React.Component {
     $.ajax({
       url: "http://localhost:8080/manager/getOtherInfo",
       type: "GET",
-      success: function (result) {
+      success: function(result) {
         that.setState({
           allMoney: result.allMoney,
           todayMerchants: result.todayMerchants,
           todayUsers: result.todayUsers,
           todayOrders: result.todayOrders
-        })
+        });
       }
     });
     $.ajax({
       url: "http://localhost:8080/manager/getWeekMerchantData",
       type: "GET",
-      success: function (result) {
+      success: function(result) {
         let labelsArray = [];
         let seriesArray = [[]];
         for (let x of result) {
@@ -64,13 +65,13 @@ class Statistics extends React.Component {
         that.setState({
           merLabels: labelsArray,
           merSeries: seriesArray
-        })
+        });
       }
     });
     $.ajax({
       url: "http://localhost:8080/manager/getWeekUsersData",
       type: "GET",
-      success: function (result) {
+      success: function(result) {
         let labelsArray = [];
         let seriesArray = [[]];
         for (let x of result) {
@@ -80,13 +81,13 @@ class Statistics extends React.Component {
         that.setState({
           userLabels: labelsArray,
           userSeires: seriesArray
-        })
+        });
       }
     });
     $.ajax({
       url: "http://localhost:8080/manager/getWeekOrdersData",
       type: "GET",
-      success: function (result) {
+      success: function(result) {
         let labelsArray = [];
         let seriesArray = [[]];
         for (let x of result) {
@@ -98,25 +99,25 @@ class Statistics extends React.Component {
         that.setState({
           orderLabels: labelsArray,
           orderSeries: seriesArray
-        })
+        });
       }
     });
     $.ajax({
       url: "http://localhost:8080/manager/getMostUsers",
       type: "GET",
-      success: function (result) {
+      success: function(result) {
         that.setState({
           userChart: result
-        })
+        });
       }
     });
     $.ajax({
       url: "http://localhost:8080/manager/getMostMerchants",
       type: "GET",
-      success: function (result) {
+      success: function(result) {
         that.setState({
           merchantChart: result
-        })
+        });
       }
     });
   }
@@ -155,7 +156,7 @@ class Statistics extends React.Component {
         bottom: 0,
         left: 0
       }
-    }
+    };
 
     let responsiveOptions = [
       [
@@ -163,16 +164,16 @@ class Statistics extends React.Component {
         {
           seriesBarDistance: 5,
           axisX: {
-            labelInterpolationFnc: function (value) {
+            labelInterpolationFnc: function(value) {
               return value[0];
             }
           }
         }
       ]
-    ]
+    ];
 
     let numAnimation = {
-      draw: function (data) {
+      draw: function(data) {
         if (data.type === "line" || data.type === "area") {
           data.element.animate({
             d: {
@@ -202,7 +203,7 @@ class Statistics extends React.Component {
     };
 
     let moneyAnimation = {
-      draw: function (data) {
+      draw: function(data) {
         if (data.type === "bar") {
           data.element.animate({
             opacity: {
@@ -215,22 +216,22 @@ class Statistics extends React.Component {
           });
         }
       }
-    }
+    };
 
     let merData = {
       labels: this.state.merLabels,
       series: this.state.merSeries
-    }
+    };
 
     let userData = {
       labels: this.state.userLabels,
       series: this.state.userSeires
-    }
+    };
 
     let orderData = {
       labels: this.state.orderLabels,
       series: this.state.orderSeries
-    }
+    };
 
     return (
       <div>
@@ -248,7 +249,8 @@ class Statistics extends React.Component {
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <Update />Just Updated
+                  <Update />
+                  Just Updated
                 </div>
               </CardFooter>
             </Card>
@@ -260,11 +262,14 @@ class Statistics extends React.Component {
                   <Store />
                 </CardIcon>
                 <p className={classes.cardCategory}>新商户</p>
-                <h3 className={classes.cardTitle}>+{this.state.todayMerchants}</h3>
+                <h3 className={classes.cardTitle}>
+                  +{this.state.todayMerchants}
+                </h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <DateRange />Last 24 Hours
+                  <DateRange />
+                  Last 24 Hours
                 </div>
               </CardFooter>
             </Card>
@@ -280,7 +285,8 @@ class Statistics extends React.Component {
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <DateRange />Last 24 Hours
+                  <DateRange />
+                  Last 24 Hours
                 </div>
               </CardFooter>
             </Card>
@@ -296,7 +302,8 @@ class Statistics extends React.Component {
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
-                  <Update />Just Updated
+                  <Update />
+                  Just Updated
                 </div>
               </CardFooter>
             </Card>
@@ -316,9 +323,7 @@ class Statistics extends React.Component {
               </CardHeader>
               <CardBody>
                 <h4 className={classes.cardTitle}>商户数量</h4>
-                <p className={classes.cardCategory}>
-                  商家总数变化情况
-                </p>
+                <p className={classes.cardCategory}>商家总数变化情况</p>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>
@@ -340,9 +345,7 @@ class Statistics extends React.Component {
               </CardHeader>
               <CardBody>
                 <h4 className={classes.cardTitle}>客户数量</h4>
-                <p className={classes.cardCategory}>
-                  注册用户总数变化情况
-                </p>
+                <p className={classes.cardCategory}>注册用户总数变化情况</p>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>
@@ -365,9 +368,7 @@ class Statistics extends React.Component {
               </CardHeader>
               <CardBody>
                 <h4 className={classes.cardTitle}>每日订单</h4>
-                <p className={classes.cardCategory}>
-                  每日订单总金额
-                </p>
+                <p className={classes.cardCategory}>每日订单总金额</p>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>
@@ -382,9 +383,7 @@ class Statistics extends React.Component {
             <Card>
               <CardHeader color="rose">
                 <h4 className={classes.cardTitleWhite}>顾客消费排行</h4>
-                <p className={classes.cardCategoryWhite}>
-                  总消费额最高的客户
-                </p>
+                <p className={classes.cardCategoryWhite}>总消费额最高的客户</p>
               </CardHeader>
               <CardBody>
                 <Table
@@ -399,9 +398,7 @@ class Statistics extends React.Component {
             <Card>
               <CardHeader color="primary">
                 <h4 className={classes.cardTitleWhite}>商家营收排行</h4>
-                <p className={classes.cardCategoryWhite}>
-                  总营收额最高的商家
-                </p>
+                <p className={classes.cardCategoryWhite}>总营收额最高的商家</p>
               </CardHeader>
               <CardBody>
                 <Table
@@ -414,8 +411,8 @@ class Statistics extends React.Component {
           </GridItem>
         </GridContainer>
       </div>
-    )
+    );
   }
 }
 
-export default withStyles(dashboardStyle)(Statistics)
+export default withStyles(dashboardStyle)(Statistics);
