@@ -1,6 +1,7 @@
 import FastFood from "@material-ui/icons/Fastfood";
 import LibraryBooks from "@material-ui/icons/LibraryBooksOutlined";
 import MerchantView from "./views/MerchantView/MerchantView";
+import MerchantInfo from "./views/MerchantView/MerchantInfo";
 import MerchantOrders from "./views/MerchantOrders/MerchantOrders";
 import RestStat from "./views/RestaurantView/RestStat";
 import BarChart from "@material-ui/icons/BarChart";
@@ -27,6 +28,13 @@ var merchantRoutes = [
     name: "统计信息",
     icon: BarChart,
     component: RestStat,
+    layout: "/merchant"
+  },
+  {
+    path: "/infor",
+    name: "餐厅信息",
+    icon: BarChart,
+    component: MerchantInfo,
     layout: "/merchant"
   }
 ];
