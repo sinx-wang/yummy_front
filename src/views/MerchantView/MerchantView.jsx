@@ -17,7 +17,18 @@ import { FormControl, InputLabel, Select, MenuItem, TextField, Paper, Table, Tab
 import CardFooter from "../../components/Card/CardFooter";
 import Button from "../../components/CustomButtons/Button";
 import image from "assets/img/paella.jpg";
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import $ from "jquery"
+
 
 const styles = {
   cardCategoryWhite: {
@@ -53,18 +64,76 @@ const styles = {
   }
 }
 
+const foods = [
+  {
+    foodId: 1,
+    img: "../../assets/img/burgers.jpg",
+    foodName: "hunburger1",
+    foodPrice: 12.0,
+    foodDiscount:8,
+    dailyMount: 20,
+    dailyLast:8,
+    description:"no description"
+  },
+  {
+    foodId: 2,
+    img: "../../assets/img/burgers.jpg",
+    foodName: "hunburger2",
+    foodPrice: 12.0,
+    foodDiscount:8,
+    dailyMount: 20,
+    dailyLast:8,
+    description:"no description"
+  },
+  {
+    foodId: 3,
+    img: "../../assets/img/burgers.jpg",
+    foodName: "hunburger3",
+    foodPrice: 12.0,
+    foodDiscount:8,
+    dailyMount: 20,
+    dailyLast:8,
+    description:"no description"
+  }
+];
+
+const meals = [
+  {
+    foodId: 1,
+    img: "../../assets/img/burgers.jpg",
+    foodName: "meal1",
+    foodPrice: 12.0,
+    foodDiscount:8,
+    dailyMount: 20,
+    dailyLast:8,
+    description:"no description"
+  },
+  {
+    foodId: 2,
+    img: "../../assets/img/burgers.jpg",
+    foodName: "meal2",
+    foodPrice: 12.0,
+    foodDiscount:8,
+    dailyMount: 20,
+    dailyLast:8,
+    description:"no description"
+  },
+  {
+    foodId: 3,
+    img: "../../assets/img/burgers.jpg",
+    foodName: "meal3",
+    foodPrice: 12.0,
+    foodDiscount:8,
+    dailyMount: 20,
+    dailyLast:8,
+    description:"no description"
+  }
+];
+
 class MerchantView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      code: "",
-      email: "",
-      name: "",
-      location: "",
-      types: [],
-      selectedType: "",
-      selectedFood: {},
-      infoButtonDisabled: false,
       tableUpdate: false,
     };
   }
@@ -108,87 +177,9 @@ class MerchantView extends React.Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.code !== this.state.code) {
-      let json = {
-        "code": this.state.code
-      }
-      let that = this;
-      $.ajax({
-        url: "http://localhost:8080/merchant/getFoodTypes",
-        type: "GET",
-        success: function (result) {
-          that.setState({
-            types: result.types
-          })
-        }
-      })
-      $.ajax({
-        url: "http://localhost:8080/merchant/getInfo",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(json),
-        success: function (result) {
-          if (result.status) {
-            that.setState({
-              email: result.email,
-              name: result.name,
-              selectedType: result.type,
-              location: result.location
-            })
-          } else {
-            alert(result.message);
-          }
-        }
-      })      
-    }
-  }
-
   selectFood = foodObject => {
     this.setState({
       selectedFood: foodObject
-    })
-  }
-
-  handleSelect = event => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  }
-
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value,
-    });
-  }
-
-  handleChangeInfo = () => {
-    this.setState({ infoButtonDisabled: true })
-    let code = this.state.code;
-    let email = this.state.email;
-    let name = this.state.name;
-    let type = this.state.selectedType;
-    let location = this.state.location;
-
-    let info = {
-      "code": code,
-      "email": email,
-      "name": name,
-      "type": type,
-      "location": location
-    };
-    let that = this;
-
-    $.ajax({
-      url: "http://localhost:8080/merchant/setInfo",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(info),
-      success: function (result) {
-        if (result.status) {
-          that.setState({ infoButtonDisabled: false })
-        }
-      }
     })
   }
 
@@ -197,105 +188,12 @@ class MerchantView extends React.Component {
       return { tableUpdate: !prevState.tableUpdate }
     })
   }
-
+  
   render() {
     const { classes } = this.props;
     return (
       <div>
         <GridContainer>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card>
-              <CardHeader color="primary" icon>
-                <CardIcon color="primary">
-                  <InfoOutlined />
-                </CardIcon>
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>基本信息</h4>
-                <GridContainer justify="center">
-                  <GridItem xs={12} sm={12} md={12}>
-                    <TextField
-                      id="merchantCode"
-                      label="固定编码"
-                      value={this.state.code}
-                      style={{ width: 200 }}
-                      onChange={this.handleChange}
-                      margin="dense"
-                      InputProps={{
-                        readOnly: true
-                      }}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <TextField
-                      id="email"
-                      label="电子邮箱"
-                      value={this.state.email}
-                      type="email"
-                      name="email"
-                      autoComplete="email"
-                      margin="dense"
-                      style={{ width: 200 }}
-                      onChange={this.handleChange}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <TextField
-                      required
-                      id="name"
-                      label="名称"
-                      value={this.state.name}
-                      style={{ width: 200 }}
-                      margin="dense"
-                      onChange={this.handleChange}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <TextField
-                      required
-                      id="location"
-                      label="地点"
-                      value={this.state.location}
-                      style={{ width: 200 }}
-                      margin="dense"
-                      onChange={this.handleChange}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <FormControl style={{ minWidth: 200, marginTop: 6 }}>
-                      <InputLabel htmlFor="food-type">餐厅类型</InputLabel>
-                      <Select
-                        value={this.state.selectedType}
-                        onChange={this.handleSelect}
-                        name="type"
-                        inputProps={{
-                          id: "food-type"
-                        }}
-                        className={classes.selectEmpty}
-                      >
-                        {this.state.types.map(row => (
-                          <MenuItem key={row.value} value={row.value}>{row.typeName}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </GridItem>
-                </GridContainer>
-              </CardBody>
-              <CardFooter>
-                <Button type="button" color="info" disabled={this.state.infoButtonDisabled} onClick={this.handleChangeInfo}>提交</Button>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={8}>
-            <Card>
-              <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>餐品发布</h4>
-              </CardHeader>
-              <CardBody>
-                <ReleaseFood ID={this.state.code} selectedFood={this.state.selectedFood} shouldUpdate={this.updateTable} />
-              </CardBody>
-            </Card>
-          </GridItem>
           <GridItem xs={12} sm={12} md={12}>
             <Tabs
               title="已发布:"
@@ -304,12 +202,29 @@ class MerchantView extends React.Component {
                 {
                   tabName: "单品",
                   tabIcon: FilterNone,
-                  tabContent: (<ShowFoods ID={this.state.code} isSingle={true} update={this.state.tableUpdate} select={this.selectFood.bind(this)} styleName={styles} />)
+                  tabContent: (
+                  <ShowFoods ID={this.state.code} isSingle={true} update={this.state.tableUpdate} select={this.selectFood.bind(this)} styleName={styles} />
+                )
                 },
                 {
                   tabName: "套餐",
                   tabIcon: Filter,
                   tabContent: (<ShowFoods ID={this.state.code} isSingle={false} update={this.state.tableUpdate} select={this.selectFood.bind(this)} styleName={styles} />)
+                },
+                {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},
+                {
+                  tabName: "增加",
+                  tabIcon: AddIcon,
+                  tabContent: ( 
+                  <Card>
+                    <CardHeader color="primary">
+                      <p style={{marginTop:"3px",marginBottom:"3px",fontSize:"20px"}}>餐品发布</p>
+                    </CardHeader>
+                    <CardBody>
+                      <ReleaseFood ID={this.state.code} isEdit={false} shouldUpdate={this.updateTable} />
+                    </CardBody>
+                   </Card>
+                   )
                 }
               ]}
             />
@@ -319,9 +234,9 @@ class MerchantView extends React.Component {
     );
   }
 }
-
 class ReleaseFood extends React.Component {
   constructor(props) {
+    console.log(props.index)
     super(props);
     this.state = {
       singleTypes: [
@@ -346,10 +261,11 @@ class ReleaseFood extends React.Component {
       deleteDisabled: true,
     };
   }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.selectedFood !== this.props.selectedFood) {
-      let data = this.props.selectedFood;
+  componentDidMount(){
+    
+    let data = this.props.selectedFood;
+    if(data!=null){
+      console.log(data);
       this.setState({
         isSingle: data.isSingle,
         foodId: data.foodId,
@@ -364,10 +280,31 @@ class ReleaseFood extends React.Component {
       })
     }
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedFood !== this.props.selectedFood) {
+      let data = this.props.selectedFood;
+      if(data!=null){
+      console.log(data);
+      this.setState({
+        isSingle: data.isSingle,
+        foodId: data.foodId,
+        foodName: data.foodName,
+        foodPrice: data.foodPrice,
+        foodDiscount: data.foodDiscount,
+        dailyMount: data.dailyMount,
+        dailyLast: data.dailyLast,
+        description: data.description,
+        submitDisabled: false,
+        deleteDisabled: false
+      })
+    }
+    }
+  }
 
   handleSelect = event => {
+    console.log(event.target.name+" "+event.target.value)
     this.setState({
-      [event.target.name]: event.target.value
+      isSingle: event.target.value
     })
   }
 
@@ -467,29 +404,58 @@ class ReleaseFood extends React.Component {
     }
   }
 
+  confirmRelease=()=>{
+    let food={
+      foodId: this.state.foodId,
+      img: "../../assets/img/burgers.jpg",
+      foodName:this.state.foodName,
+      foodPrice:this.state.foodPrice,
+      foodDiscount:this.state.foodDiscount,
+      dailyMount:this.state.dailyMount,
+      dailyLast:this.state.dailyLast,
+      description:this.state.description
+    }
+    if(this.state.isSingle){
+      foods.push(food)
+    }else{
+      meals.push(food)
+    }
+    alert("添加成功!")
+  }
+
+  confirmEdit=()=>{
+    let index=this.props.index
+    let food={
+      foodId: this.state.foodId,
+      img: "../../assets/img/burgers.jpg",
+      foodName:this.state.foodName,
+      foodPrice:this.state.foodPrice,
+      foodDiscount:this.state.foodDiscount,
+      dailyMount:this.state.dailyMount,
+      dailyLast:this.state.dailyLast,
+      description:this.state.description
+    }
+    console.log("food1:"+food.dailyLast)
+    this.props.confirmEdit(index,food);
+  }
+
   render() {
     return (
       <div>
         <GridContainer align="flex-start">
-          <GridItem xs={12} sm={4} md={4}>
-            <Button color="warning" simple onClick={this.handleClear}><DeleteOutlined />清空填写内容</Button>
-          </GridItem>
-          <GridItem xs={12} sm={4} md={4}>
+         <GridItem xs={12} sm={4} md={4}>
             <Button color="rose" simple><CloudOutlined />上传图片</Button>
           </GridItem>
+          <GridItem xs={12} sm={8} md={8}></GridItem>
           <GridItem xs={12} sm={4} md={4}>
-            <FormControl variant="outlined" style={{ minWidth: 160, marginTop: 6 }}>
-              <InputLabel htmlFor="isSingle">是否单品</InputLabel>
+            <FormControl style={{ minWidth: 160, marginTop: 16 }}>
+              <InputLabel htmlFor="isSingle">类型</InputLabel>
               <Select
                 value={this.state.isSingle}
                 onChange={this.handleSelect}
-                input={
-                  <OutlinedInput
-                    labelWidth={160}
-                    name="isSingle"
-                    id="isSingle"
-                  />
-                }
+                inputProps={{
+                  readOnly: this.props.isEdit
+                }}
               >
                 {this.state.singleTypes.map(row => (
                   <MenuItem key={row.value} value={row.value}>{row.name}</MenuItem>
@@ -559,8 +525,6 @@ class ReleaseFood extends React.Component {
           <GridItem xs={12} sm={12} md={12}>
             <TextField
               id="description"
-              multiline
-              rows="4"
               label="详细描述"
               value={this.state.description}
               margin="normal"
@@ -568,11 +532,16 @@ class ReleaseFood extends React.Component {
               onChange={this.handleChange}
             />
           </GridItem>
-          <GridItem>
-            <Button type="button" color="info" style={{ marginTop: 10 }} onClick={this.handleSubmit}>提交</Button>
-          </GridItem>
-          <GridItem>
-            <Button type="button" color="danger" disabled={this.state.deleteDisabled} style={{ marginTop: 10 }} onClick={this.handleDelete}><Delete />删除餐品</Button>
+          <GridItem xs={9} sm={9} md={10}> </GridItem>
+          <GridItem xs={2} sm={2} md={2}>
+           <Button type="button" color="info" style={{ marginTop: 10}} 
+           onClick={() => { 
+             if(this.props.isEdit){
+               this.confirmEdit();
+               }else{
+               this.confirmRelease();
+               }
+               }}>确认</Button>
           </GridItem>
         </GridContainer>
       </div>
@@ -584,7 +553,20 @@ class ShowFoods extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      foodData: []
+      foodData: [],
+      openEditDialog:false,
+      openDeleteDialog:false,
+      currentIndex:0,
+      currentFood:{
+        foodId:"",
+        img:"",
+        foodName:"",
+        foodPrice: "",
+        foodDiscount:"",
+        dailyMount: "",
+        dailyLast:"",
+        description:""
+      }
     }
   }
   componentDidMount() {
@@ -598,7 +580,31 @@ class ShowFoods extends React.Component {
     }
   }
 
+  handleClickOpenEdit=(index,row)=> {
+    this.setState({openEditDialog:true,currentFood:row,currentIndex:index});
+  }
+
+  handleCloseEdit=()=> {
+    this.setState({openEditDialog:false});
+  }
+
+  handleClickOpenDelete=(index)=> {
+    this.setState({openDeleteDialog:true,currentIndex:index});
+  }
+
+  handleCloseDelete=()=> {
+    this.setState({openDeleteDialog:false});
+  }
+  handleConfirmDelete=()=> {
+    let foodList=this.state.foodData
+    let index=this.state.currentIndex
+    delete foodList[index]
+    this.setState({foodData:foodList,openDeleteDialog:false});
+  }
+
+
   getFoodData = () => {
+    /*
     let id = this.props.ID;
     let isSingle = this.props.isSingle;
 
@@ -615,12 +621,31 @@ class ShowFoods extends React.Component {
       success: function (data) {
         that.setState({ foodData: data.foods })
       }
-    })
+    })*/
+    if(this.props.isSingle){
+      this.setState({ foodData: foods })
+    }else{
+      this.setState({ foodData: meals })
+    }
+    
   }
 
+  selectFood=(row)=>{
+    this.setState({
+
+    })
+  }
   valueToFood = food => {
     this.props.select(food);
   }
+
+  confirmEdit=(index,food)=>{
+    console.log(index+":"+food.dailyLast)
+    let foodList=this.state.foodData
+    foodList[index]=food
+    this.setState({foodData:foodList,openEditDialog:false,currentFood:food})
+  }
+
 
   render() {
     // const { classes } = this.props;
@@ -629,30 +654,83 @@ class ShowFoods extends React.Component {
         <Paper className={styles.root}>
           <Table>
             <TableHead>
-              <TableRow>
-                <TableCell align="justify">图片</TableCell>
-                <TableCell align="justify">名称</TableCell>
-                <TableCell align="justify">价格(元)</TableCell>
-                <TableCell align="justify">折扣</TableCell>
-                <TableCell align="justify">数量</TableCell>
-                <TableCell align="justify">剩余</TableCell>
-                <TableCell align="justify">详细信息</TableCell>
+              <TableRow style={{height:"70px"}}>
+                <TableCell style={{paddingRight:"24px"}} align="justify">图片</TableCell>
+                <TableCell style={{paddingRight:"24px"}} align="justify">名称</TableCell>
+                <TableCell style={{paddingRight:"24px"}} align="justify">价格(元)</TableCell>
+                <TableCell style={{paddingRight:"24px"}} align="justify">折扣</TableCell>
+                <TableCell style={{paddingRight:"24px"}} align="justify">数量</TableCell>
+                <TableCell style={{paddingRight:"24px"}} align="justify">剩余</TableCell>
+                <TableCell style={{paddingRight:"24px"}} align="justify">详细信息</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.foodData.map(row => (
-                <TableRow key={row.foodId} hover style={{ cursor: "pointer" }} onClick={this.valueToFood.bind(this, row)}>
-                  <TableCell align="justify"><Avatar alt="图片" src={image} /></TableCell>
-                  <TableCell align="justify">{row.foodName}</TableCell>
-                  <TableCell align="justify">{row.foodPrice}</TableCell>
-                  <TableCell align="justify">{row.foodDiscount}</TableCell>
-                  <TableCell align="justify">{row.dailyMount}</TableCell>
-                  <TableCell align="justify">{row.dailyLast}</TableCell>
-                  <TableCell align="justify">{row.description}</TableCell>
+              {this.state.foodData.map((row,index) => (
+                <TableRow key={row.foodId} hover style={{ cursor: "pointer",height:"70px",paddingRight:"24px" }}>
+                  <TableCell style={{paddingRight:"24px"}} align="justify"><Avatar alt="图片" src={require("../../assets/img/burgers.jpg")} /></TableCell>
+                  <TableCell style={{paddingRight:"24px"}} align="justify">{row.foodName}</TableCell>
+                  <TableCell style={{paddingRight:"24px"}} align="justify">{row.foodPrice}</TableCell>
+                  <TableCell style={{paddingRight:"24px"}} align="justify">{row.foodDiscount}</TableCell>
+                  <TableCell style={{paddingRight:"24px"}} align="justify">{row.dailyMount}</TableCell>
+                  <TableCell style={{paddingRight:"24px"}} align="justify">{row.dailyLast}</TableCell>
+                  <TableCell style={{paddingRight:"24px"}} align="justify">{row.description}</TableCell>
+                  <TableCell>
+                    <IconButton aria-label="Edit" onClick={(e)=>{this.handleClickOpenEdit(index,row)}}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton aria-label="Delete" style={{paddingLeft:"15px"}} onClick={(e)=>this.handleClickOpenDelete(index)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          <Dialog open={this.state.openEditDialog} onClose={this.handleCloseEdit} aria-labelledby="form-dialog-title">
+                    <DialogContent>
+                    <Card>
+                      <CardHeader color="primary">
+                        <p style={{marginTop:"3px",marginBottom:"3px",fontSize:"20px"}}>餐品编辑</p>
+                      </CardHeader>
+                        <CardBody>
+                          <ReleaseFood ID={this.state.code} isEdit={true} index={this.state.currentIndex} confirmEdit={this.confirmEdit}
+                          selectedFood={{
+                            isSingle: this.props.isSingle,
+                            foodId: this.state.currentFood.foodId,
+                            foodName: this.state.currentFood.foodName,
+                            foodPrice: this.state.currentFood.foodPrice,
+                            foodDiscount: this.state.currentFood.foodDiscount,
+                            dailyMount: this.state.currentFood.dailyMount,
+                            dailyLast: this.state.currentFood.dailyLast,
+                            description: this.state.currentFood.description
+                          }}
+                          shouldUpdate={this.updateTable} />
+                        </CardBody>
+                      </Card>
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog
+                    open={this.state.openDeleteDialog}
+                    onClose={this.handleCloseDelete}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                  <DialogTitle id="alert-dialog-title">{"删除"}</DialogTitle>
+                   <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                       确定要删除这个菜品吗？
+                       </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                       <Button onClick={this.handleCloseDelete} color="primary" style={{paddingLeft:"12px",paddingRight:"12px",paddingTop:"6px",paddingBottom:"6px"}}>
+                        取消
+                       </Button>
+                       <Button onClick={this.handleConfirmDelete} color="primary" style={{paddingLeft:"12px",paddingRight:"12px",paddingTop:"6px",paddingBottom:"6px"}} autoFocus>
+                        确认
+                       </Button>
+                    </DialogActions>
+                  </Dialog>
         </Paper>
       </div>);
   }

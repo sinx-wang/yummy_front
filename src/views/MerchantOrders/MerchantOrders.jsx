@@ -10,6 +10,9 @@ import { Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@materi
 import Button from "../../components/CustomButtons/Button";
 import MyStepper from "../../components/MyStepper/MyStepper";
 import MUIDataTable from "mui-datatables";
+import FilterNone from "@material-ui/icons/FilterNone";
+import Filter from "@material-ui/icons/Filter"
+import Tabs from "../../components/CustomTabs/CustomTabs"
 
 const styles = {
   cardCategoryWhite: {
@@ -99,6 +102,99 @@ const historyColumns = [
     }
   },
 ]
+const currentOrderList=[
+  {
+  orderId:1,
+  orderTime:"2018.06.18 16:41:00",
+  userName:"user",
+  foodName:"hunbeger1",
+  foodPrice:12,
+  foodNum:20,
+  foodDiscount:8,
+  hasAccept:false,
+  hasComplete:false,
+  },
+  {
+    orderId:2,
+    orderTime:"2018.06.18 16:41:00",
+    userName:"user",
+    foodName:"hunbeger1",
+    foodPrice:12,
+    foodNum:20,
+    foodDiscount:8,
+    hasAccept:false,
+    hasComplete:false,
+   },
+  {
+  orderId:3,
+  orderTime:"2018.06.18 16:41:00",
+  userName:"user",
+  foodName:"hunbeger1",
+  foodPrice:12,
+  foodNum:20,
+  foodDiscount:8,
+  hasAccept:false,
+  hasComplete:false,
+  },
+  {
+    orderId:4,
+    orderTime:"2018.06.18 16:41:00",
+    userName:"user",
+    foodName:"hunbeger1",
+    foodPrice:12,
+    foodNum:20,
+    foodDiscount:8,
+    hasAccept:false,
+    hasComplete:false,
+  },  
+    
+]
+const historyOrderList=[
+  {
+    orderId:1,
+    orderTime:"2018.06.17 16:41:00",
+    userName:"user",
+    foodName:"hunbeger1",
+    foodPrice:12,
+    foodNum:20,
+    foodDiscount:8,
+    hasAccept:false,
+    hasComplete:false,
+    },
+    {
+      orderId:2,
+      orderTime:"2018.06.17 16:41:00",
+      userName:"user",
+      foodName:"hunbeger1",
+      foodPrice:12,
+      foodNum:20,
+      foodDiscount:8,
+      hasAccept:false,
+      hasComplete:false,
+     },
+    {
+    orderId:3,
+    orderTime:"2018.06.17 16:41:00",
+    userName:"user",
+    foodName:"hunbeger1",
+    foodPrice:12,
+    foodNum:20,
+    foodDiscount:8,
+    hasAccept:false,
+    hasComplete:false,
+    },
+    {
+      orderId:4,
+      orderTime:"2018.06.17 16:41:00",
+      userName:"user",
+      foodName:"hunbeger1",
+      foodPrice:12,
+      foodNum:20,
+      foodDiscount:8,
+      hasAccept:false,
+      hasComplete:false,
+    }, 
+]
 
 function MerchantOrders(props) {
   const { classes } = props;
@@ -161,62 +257,26 @@ function MerchantOrders(props) {
 
   return (
     <div>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>当前处理中订单</h4>
-            </CardHeader>
-            <CardBody>
-              <OrderGoing
-                selectedOrderId={selectedOrderId}
-              />
-              <Paper>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="justify">订单编号</TableCell>
-                      <TableCell align="justify">客户</TableCell>
-                      <TableCell align="justify">食物名称</TableCell>
-                      <TableCell align="justify">数量</TableCell>
-                      <TableCell align="justify">价格</TableCell>
-                      <TableCell align="justify">折扣</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {ordersNow.map(row => (
-                      <TableRow key={row.orderId} hover style={{ cursor: "pointer" }} onClick={() => showOrderState(row.orderId)}>
-                        <TableCell align="justify">{row.orderId}</TableCell>
-                        <TableCell align="justify">{row.userName}</TableCell>
-                        <TableCell align="justify">{row.foodName}</TableCell>
-                        <TableCell align="justify">{row.foodNum}</TableCell>
-                        <TableCell align="justify">{row.foodPrice}</TableCell>
-                        <TableCell align="justify">{row.foodDiscount}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Paper>
-            </CardBody>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="info">
-              <h4 className={classes.cardTitleWhite}>历史订单</h4>
-            </CardHeader>
-            <CardBody>
-              <MUIDataTable
-                data={ordersHistory}
-                columns={historyColumns}
-                options={{
-                  selectableRows: false
-                }}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
+       <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Tabs
+              title="订单:"
+              headerColor="info"
+              tabs={[
+                {
+                  tabName: "当前订单",
+                  tabIcon: FilterNone,
+                  tabContent: (<OrderList isCurrent={true}/>)
+                },
+                {
+                  tabName: "历史订单",
+                  tabIcon: Filter,
+                  tabContent: (<OrderList isCurrent={false}/>)
+                },
+              ]}
+            />
+          </GridItem>
+        </GridContainer>
     </div>
   )
 }
@@ -303,5 +363,139 @@ function OrderGoing(props) {
     return null;
   }
 }
+
+
+class OrderList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      orderList: [],
+      acceptState:[],
+      completeState:[],
+    }
+  }
+  componentDidMount() {
+    console.log("mounted");
+    this.getOrderData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.getOrderData();
+    }
+  }
+
+
+
+  getOrderData = () => {
+    /*
+    let id = this.props.ID;
+    let isSingle = this.props.isSingle;
+
+    let json = {
+      "merId": id,
+      "isSingle": isSingle
+    }
+    let that = this;
+    $.ajax({
+      url: "http://localhost:8080/merchant/getFoods",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(json),
+      success: function (data) {
+        that.setState({ foodData: data.foods })
+      }
+    })*/
+    let acceptStateList=[]
+    let completeStateList=[]
+    if(this.props.isCurrent){
+      this.setState({
+        orderList:currentOrderList
+      })
+      currentOrderList.map(row=>{
+        console.log(row)
+        acceptStateList.push(false)
+        completeStateList.push(false)
+      })
+    }else{
+      this.setState({
+        orderList:historyOrderList
+      })
+      historyOrderList.map(row=>{
+        console.log(row)
+        acceptStateList.push(false)
+        completeStateList.push(false)
+      })
+    }
+    this.setState({acceptState:acceptStateList,completeState:completeStateList})
+  }
+
+  render() {
+    // const { classes } = this.props;
+    return (
+      <div>
+        <Paper className={styles.root}>
+        <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="justify">订单时间</TableCell>
+                      <TableCell align="justify">客户</TableCell>
+                      <TableCell align="justify">食物名称</TableCell>
+                      <TableCell align="justify">数量</TableCell>
+                      <TableCell align="justify">价格</TableCell>
+                      <TableCell align="justify">折扣</TableCell>
+                      {this.props.isCurrent?
+                      <TableCell></TableCell>
+                      :null}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {this.state.orderList.map((row,index) => (
+                      <TableRow key={row.orderId} hover style={{ cursor: "pointer" }} >
+                        <TableCell align="justify">{row.orderTime}</TableCell>
+                        <TableCell align="justify">{row.userName}</TableCell>
+                        <TableCell align="justify">{row.foodName}</TableCell>
+                        <TableCell align="justify">{row.foodNum}</TableCell>
+                        <TableCell align="justify">{row.foodPrice}</TableCell>
+                        <TableCell align="justify">{row.foodDiscount}</TableCell>
+                        {this.props.isCurrent?
+                        <TableCell>
+                          {this.state.acceptState[index]?
+                          <Button color="transparent" style={{paddingLeft:"10px",paddingRight:"12px",marginRight:"10px"}} disabled={true}>已接单</Button>
+                          :<Button color="primary" style={{paddingLeft:"15px",paddingRight:"15px",marginRight:"15px"}} 
+                          onClick={e=>{
+                            alert("成功接单!");
+                            let acceptList=this.state.acceptState;
+                            acceptList[index]=true;
+                            this.setState({acceptState:acceptList})
+                            console.log(this.state.completeState)
+                            console.log(this.state.acceptState)
+                          }}>接单</Button>
+                          }
+                          {this.state.completeState[index]?
+                          <Button color="transparent" style={{paddingLeft:"10px",paddingRight:"15px",marginRight:"15px"}} disabled={true}>已送出</Button>
+                          :
+                          <Button color="primary" style={{paddingLeft:"15px",paddingRight:"15px",marginRight:"5px"}} 
+                          onClick={e=>{
+                            alert("成功送出!");
+                            let completeList=this.state.completeState;
+                            completeList[index]=true;
+                            this.setState({completeState:completeList})
+                            console.log(this.state.completeState)
+                            console.log(this.state.acceptState)
+                          }}>送出</Button>
+                          }
+                          </TableCell>
+                        :null}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+        </Paper>
+      </div>);
+  }
+}
+
+
 
 export default withStyles(styles)(MerchantOrders)
