@@ -263,5 +263,93 @@ const getFoodProfit = () => {
 };
 SetData.getFoodProfit = getFoodProfit;
 
+const allMonthAverPrice = [
+  32,
+  30,
+  28.5,
+  29.5,
+  32.5,
+  33,
+  31,
+  29,
+  30.5,
+  32,
+  33,
+  33.5
+];
+SetData.allMonthAverPrice = allMonthAverPrice;
+
+const allMonthSellPercen = [
+  98.8,
+  96.5,
+  98.8,
+  94.9,
+  98.5,
+  94.5,
+  96.6,
+  96.1,
+  95.4,
+  96.5,
+  99.6,
+  95
+];
+SetData.allMonthSellPercen = allMonthSellPercen;
+
+// 商家平均售价
+const restAverPriceX = ["10~15", "15~20", "20~25", "25~30", "30~35", "35~40"];
+SetData.restAverPriceX = restAverPriceX;
+
+const restMonthAverPriceY = [1276, 2549, 3200, 2975, 2391, 1877];
+SetData.restMonthAverPriceY = restMonthAverPriceY;
+
+const restMonthTypeY = [3123, 2843, 2101, 2566];
+SetData.restMonthTypeY = restMonthTypeY;
+
+const restMonthRegisterTimeY = [
+  2519,
+  2625,
+  2408,
+  2426,
+  2400,
+  2471,
+  2576,
+  2603,
+  2400,
+  2588,
+  2492,
+  2490
+];
+SetData.restMonthRegisterTimeY = restMonthRegisterTimeY;
+
+const custMonthRegisterTimeY = [38, 40, 31, 29, 43, 44, 45, 29, 36, 34, 30, 33];
+SetData.custMonthRegisterTimeY = custMonthRegisterTimeY;
+
+const custRegionX = ["南京", "镇江", "无锡", "苏州", "常州"];
+SetData.custRegionX = custRegionX;
+
+const custRegionY = [42, 35, 37, 40, 36];
+SetData.custRegionY = custRegionY;
+
+const table1 = [
+  ["学生第一餐厅", 21, "经典中餐", 3573],
+  ["MacDonald", 30, "快餐", 3483],
+  ["大卫时尚餐厅", 23, "快餐", 3376],
+  ["大小姐的饭", 25, "经典中餐", 3343],
+  ["C一点寿司", 27, "西餐料理", 3289],
+  ["林聪烤鱼店", 27, "经典中餐", 3240],
+  ["花蛤店", 25.5, "经典中餐", 3149]
+];
+SetData.table1 = table1;
+
+const table2 = [
+  ["用户1", "2018-8-23", "南京", 106],
+  ["用户2", "2019-4-01", "苏州", 75],
+  ["用户3", "2019-5-11", "镇江", 70],
+  ["用户4", "2018-12-07", "无锡", 66],
+  ["用户5", "2019-7-05", "南京", 66],
+  ["用户6", "2018-11-11", "常州", 64]
+];
+SetData.table2 = table2;
+
 export default SetData;
 // const seasonY = monthY
