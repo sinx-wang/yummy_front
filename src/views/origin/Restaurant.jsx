@@ -1,6 +1,6 @@
+/* eslint-disable no-console */
 import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import $ from "jquery";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import Card from "../../components/Card/Card";
@@ -8,19 +8,19 @@ import CardHeader from "../../components/Card/CardHeader";
 import CardBody from "../../components/Card/CardBody";
 import CardFooter from "../../components/Card/CardFooter";
 import {
-  Paper,
+  // Paper,
   Table,
   TableHead,
   TableRow,
   TableBody,
-  TableCell,
-  IconButton
+  TableCell
+  // IconButton
 } from "@material-ui/core";
-import Done from "@material-ui/icons/Done";
-import Clear from "@material-ui/icons/Clear";
+// import Done from "@material-ui/icons/Done";
+// import Clear from "@material-ui/icons/Clear";
 import Button from "../../components/CustomButtons/Button.jsx";
-import AddIcon from "@material-ui/icons/Add";
-import Fab from "@material-ui/core/Fab";
+// import AddIcon from "@material-ui/icons/Add";
+// import Fab from "@material-ui/core/Fab";
 
 const styles = {
   cardCategoryWhite: {
@@ -143,7 +143,7 @@ class Restaurant extends React.Component {
             <Card>
               <CardHeader color="primary">
                 <GridContainer>
-                  <GridItem xs={3} xs={3}>
+                  <GridItem xs={3}>
                     <img
                       style={{
                         height: "200px",
@@ -153,19 +153,15 @@ class Restaurant extends React.Component {
                       src={require("../../assets/img/burgers.jpg")}
                     />
                   </GridItem>
-                  <GridItem xs={3} xs={3}>
+                  <GridItem xs={3}>
                     <p>this is a burgur restaurant</p>
                   </GridItem>
-                  <GridItem xs={3} xs={3} />
-                  <GridItem xs={3} xs={3}>
+                  <GridItem xs={3} />
+                  <GridItem xs={3}>
                     <GridContainer>
-                      <GridItem xs={12} xs={12}>
-                        {" "}
-                      </GridItem>
-                      <GridItem xs={12} xs={12}>
-                        {" "}
-                      </GridItem>
-                      <GridItem xs={12} xs={12}>
+                      <GridItem xs={12}> </GridItem>
+                      <GridItem xs={12}> </GridItem>
+                      <GridItem xs={12}>
                         <Button
                           style={{ fontSize: "20px", align: "border" }}
                           color="transparent"
@@ -202,7 +198,7 @@ class Restaurant extends React.Component {
                   </TableHead>
                   <TableBody>
                     {this.state.list.map(item => (
-                      <TableRow hover>
+                      <TableRow hover key={item.id}>
                         <TableCell>
                           <img
                             style={{
@@ -221,7 +217,7 @@ class Restaurant extends React.Component {
                             round
                             color="transparent"
                             style={{ padding: "10px" }}
-                            onClick={e => {
+                            onClick={() => {
                               item.num++;
                               let total = this.state.total + item.price;
                               this.setState({ total: total });
@@ -233,7 +229,7 @@ class Restaurant extends React.Component {
                             round
                             color="transparent"
                             style={{ padding: "10px" }}
-                            onClick={e => {
+                            onClick={() => {
                               item.num--;
                               let total = this.state.total - item.price;
                               this.setState({ total: total });

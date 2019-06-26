@@ -6,15 +6,26 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
-import Tabs from "components/CustomTabs/CustomTabs.jsx"
+import Tabs from "components/CustomTabs/CustomTabs.jsx";
 import cardImagesStyles from "assets/jss/material-dashboard-react/cardImagesStyles.jsx";
-import FilterNone from "@material-ui/icons/FilterNone"
-import Filter from "@material-ui/icons/Filter"
-import { FormControl, InputLabel, Select, MenuItem, Paper, Table, TableHead, TableRow, TableCell, TableBody, TextField } from "@material-ui/core";
+import FilterNone from "@material-ui/icons/FilterNone";
+import Filter from "@material-ui/icons/Filter";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TextField
+} from "@material-ui/core";
 import CardFooter from "../../components/Card/CardFooter";
 import $ from "jquery";
 import AccessTime from "@material-ui/icons/AccessTime";
-
 
 const style = {
   ...cardImagesStyles,
@@ -43,31 +54,31 @@ const style = {
   }
 };
 
-const restaurants=[
+const restaurants = [
   {
-    img:'../../assets/img/burgers.jpg',
-    name:"restaurant1",
-    description:"burgers",
-    distance:"<100m",
+    img: "../../assets/img/burgers.jpg",
+    name: "restaurant1",
+    description: "burgers",
+    distance: "<100m"
   },
   {
-    img:'../../assets/img/burgers.jpg',
-    name:"restaurant2",
-    description:"burgers",
-    distance:"<100m",
+    img: "../../assets/img/burgers.jpg",
+    name: "restaurant2",
+    description: "burgers",
+    distance: "<100m"
   },
   {
-    img:'../../assets/img/burgers.jpg',
-    name:"restaurant3",
-    description:"burgers",
-    distance:"<100m",
+    img: "../../assets/img/burgers.jpg",
+    name: "restaurant3",
+    description: "burgers",
+    distance: "<100m"
   },
   {
-    img:'../../assets/img/burgers.jpg',
-    name:"restaurant4",
-    description:"burgers",
-    distance:"<100m",
-  },
+    img: "../../assets/img/burgers.jpg",
+    name: "restaurant4",
+    description: "burgers",
+    distance: "<100m"
+  }
 ];
 
 // 重构目标：实现分页
@@ -97,7 +108,7 @@ function TypographyPage(props) {
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
 
   const [foodNum, setFoodNum] = React.useState(1);
-/*
+  /*
   React.useEffect(() => {
     // 设置当前登录用户
     $.ajax({
@@ -219,12 +230,12 @@ function TypographyPage(props) {
     })
   }
 */
-  const handleClickRestaurant = (event,restaurant) => {
-    alert("click here:"+restaurant.name);
+  const handleClickRestaurant = (event, restaurant) => {
+    alert("click here:" + restaurant.name);
     props.history.push({
-      pathname: "/admin/restaurant?id="+restaurant.name
-    })
-  }
+      pathname: "/admin/restaurant?id=" + restaurant.name
+    });
+  };
 
   return (
     <GridContainer>
@@ -233,38 +244,43 @@ function TypographyPage(props) {
           <CardHeader color="info">
             <h4 className={classes.cardTitleWhite}>餐厅选择</h4>
           </CardHeader>
-        <CardBody>
-          <GridContainer>
-            {restaurants.map(restaurant=>(
-              <GridItem xs={4} sm={4}>
-                 <Card onClick={(event)=>handleClickRestaurant(event,restaurant)}>
-                   <CardHeader color="info" style={{padding:0}}>
-                     <img
-                      className={classes.cardImgTop}
-                      alt="100%x200"
-                      style={{ height: "200px", width: "100%", display: "block" }}
-                      src={require('../../assets/img/burgers.jpg')}
-                      data-holder-rendered="true"
+          <CardBody>
+            <GridContainer>
+              {restaurants.map(restaurant => (
+                <GridItem xs={4} sm={4}>
+                  <Card
+                    onClick={event => handleClickRestaurant(event, restaurant)}
+                  >
+                    <CardHeader color="info" style={{ padding: 0 }}>
+                      <img
+                        className={classes.cardImgTop}
+                        alt="100%x200"
+                        style={{
+                          height: "200px",
+                          width: "100%",
+                          display: "block"
+                        }}
+                        src={require("../../assets/img/burgers.jpg")}
+                        data-holder-rendered="true"
                       />
                     </CardHeader>
-                   <CardBody>
-                   <h4 className={classes.cardTitle}>{restaurant.name}</h4>
-                   <p className={classes.cardCategory}>{restaurant.description}</p>
-                   </CardBody>
-                   <CardFooter chart>
-                     <div className={classes.stats}>
-                       {restaurant.distance}
-                     </div>
-                   </CardFooter>
-                 </Card>
-              </GridItem>
-            ))}
-          </GridContainer>
-        </CardBody>
+                    <CardBody>
+                      <h4 className={classes.cardTitle}>{restaurant.name}</h4>
+                      <p className={classes.cardCategory}>
+                        {restaurant.description}
+                      </p>
+                    </CardBody>
+                    <CardFooter chart>
+                      <div className={classes.stats}>{restaurant.distance}</div>
+                    </CardFooter>
+                  </Card>
+                </GridItem>
+              ))}
+            </GridContainer>
+          </CardBody>
         </Card>
       </GridItem>
     </GridContainer>
-
   );
 }
 
