@@ -32,6 +32,8 @@ const Sidebar = ({ ...props }) => {
           listItemClasses = classNames({
             [" " + classes[color]]: true
           });
+        } else if (prop.path === "/restaurant") {
+          return null;
         } else {
           listItemClasses = classNames({
             [" " + classes[color]]: activeRoute(prop.layout + prop.path)
@@ -64,9 +66,7 @@ const Sidebar = ({ ...props }) => {
                 />
               )}
               <ListItemText
-                primary={
-                  props.rtlActive ? prop.rtlName : prop.name
-                }
+                primary={props.rtlActive ? prop.rtlName : prop.name}
                 className={classNames(classes.itemText, whiteFontClasses, {
                   [classes.itemTextRTL]: props.rtlActive
                 })}
