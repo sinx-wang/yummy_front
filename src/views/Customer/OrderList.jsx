@@ -20,6 +20,7 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { Paper } from "@material-ui/core";
 import order from "../../variables/OrderData";
+import Steps from "../../variables/Steps";
 
 // 通过useStyles来统一设定CSS，参见https://material-ui.com/zh/styles/basics/
 const useStyles = makeStyles({
@@ -88,7 +89,7 @@ const useStyles = makeStyles({
 });
 
 // 无状态组件：方法
-function OrderList() {
+function OrderList(props) {
   //React.useState(() => {}, [])相当于componentDidMount生命周期方法，这部分可以之后再说
   React.useEffect(() => {
     console.log("Mounted");
@@ -96,8 +97,17 @@ function OrderList() {
 
   const classes = useStyles();
 
-  // 测试数据
-  const testData = order.list;
+  // 数据
+  const orders = order.list;
+
+  if (props.location.state && props.location.state.order) {
+    let newOrder = props.location.state.order;
+
+    let id = "order" + (orders.length + 1);
+    newOrder.orderId = id;
+    console.log(newOrder);
+    orders.unshift(newOrder);
+  }
 
   return (
     // 注意一部分组件是Material DashBoard里面的，可以从import部分分辨
@@ -111,9 +121,9 @@ function OrderList() {
           <CardBody>
             <Paper className={classes.root}>
               {/* ES6 map方法 */}
-              {testData.map(row => (
+              {orders.map(order => (
                 // data属性通过props传入下一层
-                <DetailedExpansionPanel key={row.id} data={row} />
+                <DetailedExpansionPanel key={order.orderId} data={order} />
               ))}
             </Paper>
           </CardBody>
@@ -128,6 +138,16 @@ function DetailedExpansionPanel(props) {
   // 取出props里的data属性值
   const data = props.data;
 
+  const [step, setStep] = React.useState(data.step);
+
+  const revokeOrder = (orderId, restId) => {
+    setStep(Steps.REVOKED);
+  };
+
+  const confirmOrder = (orderId, restId) => {
+    setStep(Steps.DONE);
+  };
+
   return (
     <ExpansionPanel
       defaultExpanded={false}
@@ -137,36 +157,24 @@ function DetailedExpansionPanel(props) {
         <div className={classes.column}>
           <Typography className={classes.heading}>{data.canteen}</Typography>
         </div>
-        <div className={classes.column}>
-          <Typography className={classes.heading}>测试餐品</Typography>
-        </div>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={classes.details}>
         <div className={classes.column}>
           <img
             alt="图片"
             // img引入src要通过require的方式
-            src={require("../../assets/img/paella.jpg")}
-            width="50%"
+            width={100}
+            height={100}
+            src={data.img}
           />
         </div>
         <div className={classes.column}>
           <Grid container>
             {data.food.map(row => (
               // map方式渲染尽量在子组件加上key, 用于分辨
-              <Grid key={row.id} container>
+              <Grid key={row.orderId} container>
                 <GridItem xs={12} sm={12} md={8}>
-                  {row.name}
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  ￥{row.price}
-                </GridItem>
-              </Grid>
-            ))}
-            {data.discount.map(row => (
-              <Grid key={row.id} container>
-                <GridItem xs={12} sm={12} md={8}>
-                  {row.name}
+                  {row.name} &times; {row.num}
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   ￥{row.price}
@@ -180,11 +188,22 @@ function DetailedExpansionPanel(props) {
       <Divider />
       <ExpansionPanelActions>
         <Step>
-          <StepLabel>派送中</StepLabel>
+          <StepLabel>{step}</StepLabel>
         </Step>
-        <Button size="small">退货</Button>
-        <Button size="small" color="primary">
-          确认收货
+        <Button
+          size="small"
+          onClick={revokeOrder}
+          disabled={step !== Steps.WAITING}
+        >
+          取消订单
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          onClick={confirmOrder}
+          disabled={step !== Steps.DELIVERING}
+        >
+          确认送达
         </Button>
       </ExpansionPanelActions>
     </ExpansionPanel>

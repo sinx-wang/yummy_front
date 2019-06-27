@@ -84,7 +84,12 @@ function PayView(props) {
     //     }
     //   });
     // }
-    props.history.push("/admin/list");
+    props.history.push({
+      pathname: "/admin/list",
+      state: {
+        order: props.location.state.order
+      }
+    });
     window.close();
   };
 

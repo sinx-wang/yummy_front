@@ -6,7 +6,7 @@ import CardBody from "components/Card/CardBody.jsx";
 import GridContainer from "../../components/Grid/GridContainer";
 import GridItem from "../../components/Grid/GridItem";
 import CardFooter from "../../components/Card/CardFooter";
-import order from "../../variables/OrderData";
+import Restaurants from "../../variables/RestData";
 import cardImagesStyles from "assets/jss/material-dashboard-react/cardImagesStyles.jsx";
 import { makeStyles } from "@material-ui/styles";
 
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 export default function OrderAct(props) {
   const classes = useStyles();
 
-  const [restaurants, setRestaurants] = React.useState(order.restaurants);
+  const [restaurants, setRestaurants] = React.useState(Restaurants.general);
 
   const handleClickRestaurant = restaurant => {
     // props.history.push({

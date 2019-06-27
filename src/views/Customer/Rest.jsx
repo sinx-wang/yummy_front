@@ -13,7 +13,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Button from "../../components/CustomButtons/Button.jsx";
 import { makeStyles } from "@material-ui/styles";
-import rest from "../../variables/RestData";
+import Restaurants from "../../variables/RestData";
+import Steps from "../../variables/Steps";
 
 const useStyles = makeStyles({
   cardCategoryWhite: {
@@ -57,13 +58,13 @@ const useStyles = makeStyles({
 function Rest(props) {
   const classes = useStyles();
 
+  const rest = Restaurants.detail;
+
   const [id, setId] = React.useState(props.location.state.id);
 
   const [logo, setLogo] = React.useState(rest[id].logo);
 
   const [name, setName] = React.useState(rest[id].name);
-
-  const [total, setTotal] = React.useState(0);
 
   const [foods, setFoods] = React.useState(rest[id].foods);
 
@@ -72,6 +73,10 @@ function Rest(props) {
   const [list, setList] = React.useState(rest[id].foods);
 
   const [isFoodList, setIsFoodList] = React.useState(true);
+
+  const [orderFood, setOrderFood] = React.useState([]);
+
+  const [total, setTotal] = React.useState(0);
 
   React.useEffect(() => {
     loadInfo();
@@ -106,11 +111,69 @@ function Rest(props) {
     setIsFoodList(false);
   };
 
-  const handlePay = () => {
-    props.history.push("/pay");
+  const addFood = (foodName, foodPrice) => {
+    for (let i = 0; i < orderFood.length; i++) {
+      if (orderFood[i].name === foodName) {
+        let tmp = orderFood[i];
+        orderFood.splice(i, 1, {
+          name: tmp.name,
+          price: tmp.price,
+          num: tmp.num + 1
+        });
+        setOrderFood(orderFood);
+
+        setTotal(total + foodPrice);
+        return;
+      }
+    }
+
+    setTotal(total + foodPrice);
+    setOrderFood(
+      orderFood.concat({
+        name: foodName,
+        price: foodPrice,
+        num: 1
+      })
+    );
   };
 
+  const deleteFood = (foodName, foodPrice) => {
+    for (let i = 0; i < orderFood.length; i++) {
+      if (orderFood[i].name === foodName && orderFood[i].num > 1) {
+        let tmp = orderFood[i];
+        orderFood.splice(i, 1, {
+          name: tmp.name,
+          price: tmp.price,
+          num: tmp.num - 1
+        });
 
+        setOrderFood(orderFood);
+
+        setTotal(total - foodPrice);
+        break;
+      } else if (orderFood[i].name === foodName && orderFood[i].num === 1) {
+        orderFood.splice(i, 1);
+        setOrderFood(orderFood);
+        setTotal(total - foodPrice);
+        break;
+      }
+    }
+  };
+
+  const handlePay = () => {
+    props.history.push({
+      pathname: "/pay",
+      state: {
+        order: {
+          canteen: rest[id].name,
+          img: rest[id].logo,
+          total: total,
+          step: Steps.WAITING,
+          food: orderFood
+        }
+      }
+    });
+  };
 
   return (
     <div>
@@ -182,12 +245,12 @@ function Rest(props) {
                           className={classes.button2}
                           onClick={() => {
                             item.num++;
-                            setTotal(total + item.price);
+                            addFood(item.name, item.price);
                           }}
                         >
                           +
                         </Button>
-                        {item.num}&nbsp;&nbsp;
+                        {item.num}
                         <Button
                           round
                           color="transparent"
@@ -195,7 +258,7 @@ function Rest(props) {
                           disabled={item.num <= 0}
                           onClick={() => {
                             item.num--;
-                            setTotal(total - item.price);
+                            deleteFood(item.name, item.price);
                           }}
                         >
                           -
