@@ -464,7 +464,7 @@ class OrderList extends React.Component {
                           <Button color="transparent" style={{paddingLeft:"10px",paddingRight:"12px",marginRight:"10px"}} disabled={true}>已接单</Button>
                           :<Button color="primary" style={{paddingLeft:"15px",paddingRight:"15px",marginRight:"15px"}} 
                           onClick={e=>{
-                            alert("成功接单!");
+                            
                             let acceptList=this.state.acceptState;
                             acceptList[index]=true;
                             this.setState({acceptState:acceptList})
@@ -477,7 +477,7 @@ class OrderList extends React.Component {
                           :
                           <Button color="primary" style={{paddingLeft:"15px",paddingRight:"15px",marginRight:"5px"}} 
                           onClick={e=>{
-                            alert("成功送出!");
+                            
                             let completeList=this.state.completeState;
                             completeList[index]=true;
                             this.setState({completeState:completeList})
