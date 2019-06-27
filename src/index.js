@@ -30,7 +30,7 @@ ReactDOM.render(
       <Route path="/merchantRegister" component={MerchanRegisterView} />
       <Route path="/pay" component={PayView} />
       <Route exact path="/login/manager" component={AdminLoginView} />
-      <Redirect from="/" to="/merchant" />
+      <Redirect from="/" to="/login" />
     </Switch>
   </Router>,
   document.getElementById("root")

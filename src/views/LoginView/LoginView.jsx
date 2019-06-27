@@ -30,8 +30,8 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
-  },
-}
+  }
+};
 
 class LoginView extends React.Component {
   constructor(props) {
@@ -47,22 +47,22 @@ class LoginView extends React.Component {
     };
   }
 
-  getEmailValue = (event) => {
+  getEmailValue = event => {
     this.setState({ email: event.target.value });
-  }
+  };
 
-  getVerifyCodeValue = (event) => {
-    this.setState({ verifyCode: event.target.value })
-  }
+  getVerifyCodeValue = event => {
+    this.setState({ verifyCode: event.target.value });
+  };
 
-  redirectToUser = (email) => {
+  redirectToUser = () => {
     this.props.history.push({
       pathname: "/admin/user",
       state: {
-        emailAddress: email
-      },
-    })
-  }
+        emailAddress: this.state.email
+      }
+    });
+  };
 
   sendVerifyCode = () => {
     let email = this.state.email;
@@ -79,16 +79,16 @@ class LoginView extends React.Component {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(json),
-        success: function (data) {
-          that.changeVerifyCodeValue()
+        success: function(data) {
+          that.changeVerifyCodeValue();
         }
       });
     }
-  }
+  };
 
   changeVerifyCodeValue = () => {
     if (this.state.flag) {
-      this.setState({ buttonText: this.state.totalNum + "秒" })
+      this.setState({ buttonText: this.state.totalNum + "秒" });
       let email = this.state.email;
       if (this.state.totalNum === 0) {
         this.setState({
@@ -103,7 +103,7 @@ class LoginView extends React.Component {
           type: "POST",
           contentType: "application/json",
           data: JSON.stringify(json),
-          success: function () {
+          success: function() {
             alert("验证码已失效");
           }
         });
@@ -111,20 +111,20 @@ class LoginView extends React.Component {
           totalNum: 120,
           flagT: true
         });
-        return
+        return;
       } else {
         this.setState({
           flagT: false
         });
       }
-      this.setState((prevState) => {
-        return { totalNum: prevState.totalNum - 1 }
+      this.setState(prevState => {
+        return { totalNum: prevState.totalNum - 1 };
       });
       setTimeout(() => {
-        this.changeVerifyCodeValue()
+        this.changeVerifyCodeValue();
       }, 1000);
     }
-  }
+  };
 
   removeVerifyCode = () => {
     let email = this.state.email;
@@ -141,7 +141,7 @@ class LoginView extends React.Component {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(json),
-        success: (data) => {
+        success: data => {
           that.setState({ totalNum: 0 });
           if (data) {
             that.redirectToUser(email);
@@ -150,12 +150,12 @@ class LoginView extends React.Component {
             that.setState({
               flagT: true,
               flag: false
-            })
+            });
           }
         }
-      })
+      });
     }
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -217,12 +217,28 @@ class LoginView extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={4}>
                       {/* <Button simple size="sm" type="button" color="info">send</Button> */}
-                      <Button variant="outlined" color="rose" disabled={this.state.buttonDisabled} style={{ marginTop: 33, marginLeft: 4 }} onClick={this.sendVerifyCode}>{this.state.buttonText}</Button>
+                      <Button
+                        variant="outlined"
+                        color="rose"
+                        disabled={this.state.buttonDisabled}
+                        style={{ marginTop: 33, marginLeft: 4 }}
+                        // onClick={this.sendVerifyCode}
+                      >
+                        {this.state.buttonText}
+                      </Button>
                     </GridItem>
                   </GridContainer>
                 </CardBody>
                 <CardFooter className="classes.cardFooter">
-                  <Button type="button" round color="warning" style={{ marginLeft: 80, minWidth: 200 }} onClick={this.removeVerifyCode}>登录</Button>
+                  <Button
+                    type="button"
+                    round
+                    color="warning"
+                    style={{ marginLeft: 80, minWidth: 200 }}
+                    onClick={this.redirectToUser}
+                  >
+                    登录
+                  </Button>
                 </CardFooter>
               </Card>
             </GridItem>
