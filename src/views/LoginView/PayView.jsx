@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from "react";
 import $ from "jquery";
 import Image from "../../assets/img/pay.png";
@@ -28,11 +29,10 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
-  },
-}
+  }
+};
 
 function PayView(props) {
-
   const { classes } = props;
 
   const [userId, setUserId] = React.useState("");
@@ -48,43 +48,45 @@ function PayView(props) {
       let id = path.slice(5);
       setOrderId(id);
     }
-  }, [])
+  }, []);
 
   React.useEffect(() => {
     console.log("orderId: " + orderId);
-  }, [orderId])
+  }, [orderId]);
 
   const handleAccount = event => {
     setUserId(event.target.value);
-  }
+  };
 
   const handlePassword = event => {
     setPassword(event.target.value);
-  }
+  };
 
   const handleConfirmPay = () => {
-    if (userId && password) {
-      let json = {
-        "userId": userId,
-        "password": password,
-        "orderId": orderId
-      }
-      $.ajax({
-        url: "http://localhost:8080/order/payOrder",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(json),
-        success: function (result) {
-          if (!result.status) {
-            console.log(result.message)
-          } else {
-            alert("支付成功!");
-            window.close();
-          }
-        }
-      })
-    }
-  }
+    // if (userId && password) {
+    //   let json = {
+    //     userId: userId,
+    //     password: password,
+    //     orderId: orderId
+    //   };
+    //   $.ajax({
+    //     url: "http://localhost:8080/order/payOrder",
+    //     type: "POST",
+    //     contentType: "application/json",
+    //     data: JSON.stringify(json),
+    //     success: function(result) {
+    //       if (!result.status) {
+    //         console.log(result.message);
+    //       } else {
+    //         alert("支付成功!");
+    //         window.close();
+    //       }
+    //     }
+    //   });
+    // }
+    props.history.push("/admin/list");
+    window.close();
+  };
 
   return (
     <div
@@ -147,7 +149,14 @@ function PayView(props) {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={10}>
-                  <Button color="rose" style={{ marginTop: 30 }} fullWidth onClick={handleConfirmPay}>支付</Button>
+                  <Button
+                    color="rose"
+                    style={{ marginTop: 30 }}
+                    fullWidth
+                    onClick={handleConfirmPay}
+                  >
+                    支付
+                  </Button>
                 </GridItem>
               </GridContainer>
             </CardBody>
@@ -155,7 +164,7 @@ function PayView(props) {
         </GridItem>
       </GridContainer>
     </div>
-  )
+  );
 }
 
 export default withStyles(styles)(PayView);

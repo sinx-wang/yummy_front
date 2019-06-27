@@ -794,7 +794,7 @@ class ShowFoods extends React.Component {
                   <TableCell>
                     <IconButton
                       aria-label="Edit"
-                      onClick={e => {
+                      onClick={() => {
                         this.handleClickOpenEdit(index, row);
                       }}
                     >
@@ -803,7 +803,7 @@ class ShowFoods extends React.Component {
                     <IconButton
                       aria-label="Delete"
                       style={{ paddingLeft: "15px" }}
-                      onClick={e => this.handleClickOpenDelete(index)}
+                      onClick={() => this.handleClickOpenDelete(index)}
                     >
                       <DeleteIcon />
                     </IconButton>

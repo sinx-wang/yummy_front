@@ -101,6 +101,10 @@ function Rest(props) {
     setIsFoodList(false);
   };
 
+  const handlePay = () => {
+    props.history.push("/pay");
+  };
+
   return (
     <div>
       <GridContainer>
@@ -200,7 +204,9 @@ function Rest(props) {
             </CardBody>
             <CardFooter>
               <div className={classes.pay}>总计：{total}</div>
-              <Button color="primary">支付</Button>
+              <Button color="primary" onClick={handlePay}>
+                支付
+              </Button>
             </CardFooter>
           </Card>
         </GridItem>
@@ -210,6 +216,7 @@ function Rest(props) {
 }
 
 Rest.propTypes = {
+  history: PropTypes.object,
   location: PropTypes.object,
   params: PropTypes.object
 };

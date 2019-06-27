@@ -19,6 +19,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { Paper } from "@material-ui/core";
+import order from "../../variables/OrderData";
 
 // 通过useStyles来统一设定CSS，参见https://material-ui.com/zh/styles/basics/
 const useStyles = makeStyles({
@@ -96,50 +97,7 @@ function OrderList() {
   const classes = useStyles();
 
   // 测试数据
-  const testData = [
-    {
-      id: "001",
-      canteen: "餐厅一",
-      total: 8,
-      food: [
-        {
-          name: "食品1",
-          price: 10
-        },
-        {
-          name: "食品2",
-          price: 3
-        }
-      ],
-      discount: [
-        {
-          name: "折扣1",
-          price: -5
-        }
-      ]
-    },
-    {
-      id: "002",
-      canteen: "餐厅二",
-      total: 10,
-      food: [
-        {
-          name: "食品1",
-          price: 10
-        },
-        {
-          name: "食品2",
-          price: 5
-        }
-      ],
-      discount: [
-        {
-          name: "折扣2",
-          price: -5
-        }
-      ]
-    }
-  ];
+  const testData = order.list;
 
   return (
     // 注意一部分组件是Material DashBoard里面的，可以从import部分分辨

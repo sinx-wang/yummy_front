@@ -33,4 +33,51 @@ const restaurants = [
 
 order.restaurants = restaurants;
 
+const list = [
+  {
+    id: "001",
+    canteen: "餐厅一",
+    total: 8,
+    food: [
+      {
+        name: "食品1",
+        price: 10
+      },
+      {
+        name: "食品2",
+        price: 3
+      }
+    ],
+    discount: [
+      {
+        name: "折扣1",
+        price: -5
+      }
+    ]
+  },
+  {
+    id: "002",
+    canteen: "餐厅二",
+    total: 10,
+    food: [
+      {
+        name: "食品1",
+        price: 10
+      },
+      {
+        name: "食品2",
+        price: 5
+      }
+    ],
+    discount: [
+      {
+        name: "折扣2",
+        price: -5
+      }
+    ]
+  }
+];
+
+order.list = list;
+
 export default order;
