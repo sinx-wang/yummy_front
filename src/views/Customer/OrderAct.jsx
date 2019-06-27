@@ -59,7 +59,7 @@ export default function OrderAct(props) {
       <GridItem xs={12} sm={12} md>
         <Card>
           <CardHeader color="info">
-            <h4 className={classes.cardTitleWhite}>餐厅选择</h4>
+            <h4 className={classes.cardTitleWhite}>餐厅</h4>
           </CardHeader>
           <CardBody>
             <GridContainer>
@@ -75,7 +75,7 @@ export default function OrderAct(props) {
                           width: "100%",
                           display: "block"
                         }}
-                        src={require("../../assets/img/burgers.jpg")}
+                        src={restaurant.img}
                         data-holder-rendered="true"
                       />
                     </CardHeader>
