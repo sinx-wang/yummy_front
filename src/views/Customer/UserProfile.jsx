@@ -145,7 +145,14 @@ function DynamicInputList(props) {
   };
 
   const handleDelete = addrId => {
-    console.log("delete" + addrId);
+    let addrs = [...addresses];
+    for (let i = addrs.length - 1; i >= 0; i--) {
+      if (addrs[i].addressId == addrId) {
+        addrs.splice(i, 1);
+      }
+    }
+    console.log(addrs);
+    setAddresses(addrs);
   };
 
   const selectValue = event => {
@@ -230,7 +237,7 @@ function Address(props) {
       <ListItemText primary={"地址：" + addr.address} />
       <ListItemText primary={"电话：" + addr.phone} />
       <ListItemSecondaryAction className={classes.delete}>
-        <IconButton edge="end" onClick={valueToParent}>
+        <IconButton edge="end" onClick={() => valueToParent(addr.addressId)}>
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>
